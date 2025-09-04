@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#ffffff"/>
+    <meta name="theme-color" content="#1a73e8"/>
     <title>GameVault - Agregador de Bibliotecas</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,6 +17,24 @@
         .sidebar-link.active { background-color: #e9eef6; color: #1a73e8; font-weight: 600; }
         .favorite-btn.favorited svg { fill: #f44336; stroke: #f44336; }
         .toast { transition: opacity 0.3s, transform 0.3s; }
+        #json-upload-container { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border: 2px dashed #38bdf8;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .feature-badge {
+            background: #1a73e8;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -81,7 +99,34 @@
 
             <div class="p-4 md:p-8">
                 <h2 id="library-title" class="text-3xl font-bold text-gray-900 mb-6">Sua Biblioteca</h2>
-                <div id="game-library" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"></div>
+                
+                <div id="json-upload-container">
+                    <div class="text-center w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mx-auto mb-3"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="M15 15l-3-3-3 3"/></svg>
+                        <h3 class="text-xl font-semibold text-blue-800 mb-2">Adicionar Jogos Locais</h3>
+                        <p class="text-blue-600 mb-4">Para acessar seus arquivos JSON locais, instale o GameVault como um aplicativo</p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <button id="install-pwa-btn-2" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                                Instalar GameVault
+                            </button>
+                            <span class="text-gray-500 text-sm">ou</span>
+                            <div class="relative">
+                                <input type="file" id="json-file-input" accept=".json" class="hidden">
+                                <label for="json-file-input" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    Carregar Arquivo JSON
+                                </label>
+                            </div>
+                        </div>
+                        <p class="text-sm text-blue-700 mt-4 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            Após a instalação, você poderá acessar arquivos locais diretamente
+                        </p>
+                    </div>
+                </div>
+                
+                <div id="game-library" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-6"></div>
                 <div id="message-center" class="text-center py-16"></div>
             </div>
         </main>
@@ -104,10 +149,15 @@
 
     <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
-            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Locais</h3>
-            <p class="text-sm text-gray-600 mb-4">Adicione arquivos .json do seu computador. A aplicação pedirá permissão para acessá-los a cada sessão.</p>
-            <div id="local-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
-            <button id="add-local-source-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Adicionar Arquivo</button>
+            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Locais <span class="feature-badge">PWA Instalada</span></h3>
+            <p class="text-sm text-gray-600 mb-4">Gerencie arquivos .json do seu computador com acesso direto ao sistema de arquivos.</p>
+            <div id="local-sources-list" class="mb-4 max-h-60 overflow-y-auto border rounded-md p-2">
+                <p class="text-gray-500 text-center py-4">Nenhum arquivo local adicionado. Instale o app para habilitar esta funcionalidade.</p>
+            </div>
+            <button id="add-local-source-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Adicionar Arquivo Local
+            </button>
             <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
         </div>
     </div>
@@ -121,6 +171,7 @@
         let currentFilter = 'all';
         let searchQuery = '';
         const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
+        let isAppInstalled = false;
         
         // --- DOM ELEMENTS (fetched once) ---
         const dom = {
@@ -145,6 +196,7 @@
             },
             buttons: {
                 installPwa: document.getElementById('install-pwa-btn'),
+                installPwa2: document.getElementById('install-pwa-btn-2'),
                 manageOnline: document.getElementById('manage-online-sources-btn'),
                 manageLocal: document.getElementById('manage-local-sources-btn'),
                 addLocalSource: document.getElementById('add-local-source-btn'),
@@ -158,24 +210,77 @@
             },
             inputs: {
                 sourceUrl: document.getElementById('source-url-input'),
-            }
+                jsonFile: document.getElementById('json-file-input'),
+            },
+            uploadContainer: document.getElementById('json-upload-container')
         };
 
         // --- PWA LOGIC ---
         let deferredPrompt;
+        
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            isAppInstalled = true;
+            updateUIForInstalledApp();
+        }
+        
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             dom.buttons.installPwa.classList.remove('hidden');
+            dom.buttons.installPwa2.classList.remove('hidden');
         });
-        dom.buttons.installPwa.addEventListener('click', async () => {
+        
+        window.addEventListener('appinstalled', () => {
+            isAppInstalled = true;
+            deferredPrompt = null;
+            dom.buttons.installPwa.classList.add('hidden');
+            dom.buttons.installPwa2.classList.add('hidden');
+            updateUIForInstalledApp();
+            showToast('GameVault instalado com sucesso!');
+        });
+        
+        const installApp = async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                dom.buttons.installPwa.classList.add('hidden');
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    deferredPrompt = null;
+                }
+            } else if (isAppInstalled) {
+                showToast('O GameVault já está instalado!');
+            } else {
+                showToast('Use o menu do navegador para instalar o GameVault', true);
             }
-        });
+        };
+        
+        dom.buttons.installPwa.addEventListener('click', installApp);
+        dom.buttons.installPwa2.addEventListener('click', installApp);
+        
+        function updateUIForInstalledApp() {
+            // Update the upload container
+            dom.uploadContainer.innerHTML = `
+                <div class="text-center w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 mx-auto mb-3"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <h3 class="text-xl font-semibold text-green-800 mb-2">Acesso a Arquivos Locais Habilitado</h3>
+                    <p class="text-green-600 mb-4">Agora você pode acessar seus arquivos JSON locais diretamente</p>
+                    <button id="add-local-source-btn-main" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Adicionar Arquivo Local
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('add-local-source-btn-main').addEventListener('click', () => {
+                dom.buttons.addLocalSource.click();
+            });
+            
+            // Update the modal title
+            const modalTitle = document.querySelector('#local-sources-modal h3');
+            if (modalTitle) {
+                modalTitle.innerHTML = 'Gerenciar Fontes Locais <span class="feature-badge">PWA Instalada</span>';
+            }
+        }
 
         // --- IndexedDB HELPER FOR FILE HANDLES ---
         const idbHelper = {
@@ -279,6 +384,48 @@
             }
         };
 
+        // Função para carregar JSON a partir de um arquivo
+        const loadJsonFromFile = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        resolve(jsonData);
+                    } catch (err) {
+                        reject(err);
+                    }
+                };
+                reader.onerror = () => reject(reader.error);
+                reader.readAsText(file);
+            });
+        };
+
+        // Adicionar evento para carregar JSON manualmente
+        dom.inputs.jsonFile.addEventListener('change', async () => {
+            if (!dom.inputs.jsonFile.files.length) return;
+
+            try {
+                const file = dom.inputs.jsonFile.files[0];
+                const jsonData = await loadJsonFromFile(file);
+                
+                // Processar os jogos do JSON
+                games = jsonData.filter(game => game && game.id);
+                
+                if (games.length === 0) {
+                    showMessage('Nenhum jogo válido encontrado', 'O arquivo JSON não contém jogos com IDs válidos.');
+                } else {
+                    dom.messageCenter.innerHTML = '';
+                    populateCategories();
+                    renderGames();
+                    showToast(`Carregados ${games.length} jogos com sucesso!`);
+                }
+            } catch (err) {
+                console.error('Erro ao carregar JSON:', err);
+                showToast('Erro ao processar o arquivo JSON. Verifique o formato.', true);
+            }
+        });
+
         const renderGames = () => {
             dom.gameLibrary.innerHTML = '';
             const filteredGames = games.filter(game => {
@@ -379,6 +526,16 @@
         
         // --- LOCAL SOURCES LOGIC ---
         const renderLocalSourcesList = async () => {
+            if (!isAppInstalled) {
+                dom.lists.localSources.innerHTML = `
+                    <div class="text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 mx-auto mb-3"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        <p class="text-gray-500">Instale o GameVault para acessar arquivos locais</p>
+                    </div>
+                `;
+                return;
+            }
+            
             const handles = await idbHelper.getAll();
             dom.lists.localSources.innerHTML = handles.length === 0 
                 ? `<p class="text-gray-500">Nenhum ficheiro local adicionado.</p>`
@@ -388,14 +545,27 @@
                         <button class="remove-local-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-name="${name}">&times;</button>
                     </div>`).join('');
         };
+        
         dom.buttons.addLocalSource.addEventListener('click', async () => {
+            if (!isAppInstalled) {
+                showToast('Instale o app para acessar arquivos locais', true);
+                return;
+            }
+            
             try {
                 const [fileHandle] = await window.showOpenFilePicker({ types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }] });
                 await idbHelper.set({ name: fileHandle.name, handle: fileHandle });
                 await renderLocalSourcesList();
                 await loadAllSources();
-            } catch (err) { if(err.name !== 'AbortError') { console.error('Error picking file:', err); showToast('Não foi possível adicionar o ficheiro.', true); } }
+                showToast(`Arquivo ${fileHandle.name} adicionado com sucesso!`);
+            } catch (err) { 
+                if(err.name !== 'AbortError') { 
+                    console.error('Error picking file:', err); 
+                    showToast('Não foi possível adicionar o ficheiro.', true); 
+                } 
+            }
         });
+        
         dom.lists.localSources.addEventListener('click', async (e) => {
             if (e.target.classList.contains('remove-local-source-btn')) {
                 await idbHelper.delete(e.target.dataset.name);
@@ -450,10 +620,16 @@
         });
 
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+            window.addEventListener('load', () => { 
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado com sucesso'))
+                    .catch(err => console.error('Erro ao registrar Service Worker:', err)); 
+            });
         }
         
-        loadAllSources(); // Carga inicial
+        // Inicialização - mostrar mensagem inicial
+        showMessage('Bem-vindo ao GameVault!', 'Adicione uma fonte de jogos online ou local para começar.');
+        renderLocalSourcesList();
     });
     </script>
 </body>
