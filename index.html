@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .game-card { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
         .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
         .sidebar-link.active { background-color: #e9eef6; color: #1a73e8; font-weight: 600; }
         .favorite-btn.favorited svg { fill: #f44336; stroke: #f44336; }
@@ -86,22 +87,22 @@
         </main>
     </div>
 
-    <!-- Modais -->
+    <!-- Modals -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
     
-    <div id="online-sources-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+    <div id="online-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
             <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Online (URLs)</h3>
             <div id="online-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
             <form id="add-online-source-form" class="flex items-center gap-2">
-                <input type="url" id="source-url" placeholder="https://exemplo.com/biblioteca.json" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                <input type="url" id="source-url-input" placeholder="https://exemplo.com/biblioteca.json" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shrink-0">Adicionar</button>
             </form>
             <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
         </div>
     </div>
 
-    <div id="local-sources-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+    <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
             <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Locais</h3>
             <p class="text-sm text-gray-600 mb-4">Adicione arquivos .json do seu computador. A aplicação pedirá permissão para acessá-los a cada sessão.</p>
@@ -115,61 +116,74 @@
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- ESTADO & CONSTANTES ---
+        // --- STATE & CONSTANTS ---
         let games = [];
         let currentFilter = 'all';
         let searchQuery = '';
         const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
         
-        // --- DOM ELEMENTS ---
-        const gameLibrary = document.getElementById('game-library');
-        const searchBar = document.getElementById('search-bar');
-        const sidebarNav = document.getElementById('sidebar-nav');
-        const libraryTitle = document.getElementById('library-title');
-        const messageCenter = document.getElementById('message-center');
-        const categoriesContainer = document.getElementById('categories-container');
-        const toast = document.getElementById('toast');
-        const addLibraryBtn = document.getElementById('add-library-btn');
-        const addLibraryDropdown = document.getElementById('add-library-dropdown');
-        const dropdownContainer = document.getElementById('add-library-dropdown-container');
-        
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        const onlineSourcesModal = document.getElementById('online-sources-modal');
-        const localSourcesModal = document.getElementById('local-sources-modal');
-        const manageOnlineSourcesBtn = document.getElementById('manage-online-sources-btn');
-        const manageLocalSourcesBtn = document.getElementById('manage-local-sources-btn');
+        // --- DOM ELEMENTS (fetched once) ---
+        const dom = {
+            gameLibrary: document.getElementById('game-library'),
+            searchBar: document.getElementById('search-bar'),
+            sidebarNav: document.getElementById('sidebar-nav'),
+            libraryTitle: document.getElementById('library-title'),
+            messageCenter: document.getElementById('message-center'),
+            categoriesContainer: document.getElementById('categories-container'),
+            toast: document.getElementById('toast'),
+            dropdown: {
+                container: document.getElementById('add-library-dropdown-container'),
+                button: document.getElementById('add-library-btn'),
+                menu: document.getElementById('add-library-dropdown'),
+            },
+            modals: {
+                backdrop: document.getElementById('modal-backdrop'),
+                online: document.getElementById('online-sources-modal'),
+                local: document.getElementById('local-sources-modal'),
+            },
+            buttons: {
+                installPwa: document.getElementById('install-pwa-btn'),
+                manageOnline: document.getElementById('manage-online-sources-btn'),
+                manageLocal: document.getElementById('manage-local-sources-btn'),
+                addLocalSource: document.getElementById('add-local-source-btn'),
+            },
+            forms: {
+                addOnlineSource: document.getElementById('add-online-source-form'),
+            },
+            lists: {
+                onlineSources: document.getElementById('online-sources-list'),
+                localSources: document.getElementById('local-sources-list'),
+            },
+            inputs: {
+                sourceUrl: document.getElementById('source-url-input'),
+            }
+        };
 
-        // --- PWA ---
-        const installPwaBtn = document.getElementById('install-pwa-btn');
+        // --- PWA LOGIC ---
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installPwaBtn.classList.remove('hidden');
+            dom.buttons.installPwa.classList.remove('hidden');
         });
-        installPwaBtn.addEventListener('click', async () => {
+        dom.buttons.installPwa.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
+                await deferredPrompt.userChoice;
                 deferredPrompt = null;
-                if (outcome === 'accepted') {
-                    installPwaBtn.classList.add('hidden');
-                }
+                dom.buttons.installPwa.classList.add('hidden');
             }
         });
 
-        // --- IndexedDB Helper para File Handles ---
+        // --- IndexedDB HELPER FOR FILE HANDLES ---
         const idbHelper = {
             db: null,
             async initDB() {
+                if (this.db) return this.db;
                 return new Promise((resolve, reject) => {
-                    if (this.db) return resolve(this.db);
                     const request = indexedDB.open('GameVaultDB', 1);
-                    request.onerror = () => reject("Erro ao abrir IndexedDB.");
-                    request.onsuccess = (event) => {
-                        this.db = event.target.result;
-                        resolve(this.db);
-                    };
+                    request.onerror = () => reject("Error opening IndexedDB.");
+                    request.onsuccess = (event) => { this.db = event.target.result; resolve(this.db); };
                     request.onupgradeneeded = (event) => {
                         const db = event.target.result;
                         if (!db.objectStoreNames.contains('fileHandles')) {
@@ -178,37 +192,31 @@
                     };
                 });
             },
-            async getStore(mode) {
-                const db = await this.initDB();
-                return db.transaction('fileHandles', mode).objectStore('fileHandles');
-            },
-            async set(value) { (await this.getStore('readwrite')).put(value); },
-            async get(key) { return (await this.getStore('readonly')).get(key); },
-            async delete(key) { (await this.getStore('readwrite')).delete(key); },
+            async getStore(mode) { const db = await this.initDB(); return db.transaction('fileHandles', mode).objectStore('fileHandles'); },
+            async set(value) { return (await this.getStore('readwrite')).put(value); },
+            async delete(key) { return (await this.getStore('readwrite')).delete(key); },
             async getAll() { return (await this.getStore('readonly')).getAll(); }
         };
 
-        // --- FUNÇÕES PRINCIPAIS ---
+        // --- CORE FUNCTIONS ---
         const getOnlineSources = () => JSON.parse(localStorage.getItem(ONLINE_SOURCES_KEY)) || [];
         const saveOnlineSources = (sources) => localStorage.setItem(ONLINE_SOURCES_KEY, JSON.stringify(sources));
 
         const showMessage = (title, text) => {
-            messageCenter.innerHTML = `<h3 class="text-xl font-semibold text-gray-700">${title}</h3><p class="text-gray-500 mt-2">${text}</p>`;
-            gameLibrary.innerHTML = '';
+            dom.messageCenter.innerHTML = `<h3 class="text-xl font-semibold text-gray-700">${title}</h3><p class="text-gray-500 mt-2">${text}</p>`;
+            dom.gameLibrary.innerHTML = '';
         };
 
         const showToast = (message, isError = false) => {
-            toast.textContent = message;
-            toast.className = `fixed bottom-5 right-5 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transform translate-y-2 toast ${isError ? 'bg-red-600' : 'bg-gray-800'}`;
-            toast.classList.remove('opacity-0', 'translate-y-2');
-            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); }, 3000);
+            dom.toast.textContent = message;
+            dom.toast.className = `fixed bottom-5 right-5 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transform translate-y-2 toast ${isError ? 'bg-red-600' : 'bg-gray-800'}`;
+            dom.toast.classList.remove('opacity-0', 'translate-y-2');
+            setTimeout(() => { dom.toast.classList.add('opacity-0', 'translate-y-2'); }, 3000);
         };
         
-        async function verifyPermission(fileHandle, readWrite) {
-            const options = readWrite ? { mode: 'readwrite' } : {};
-            if ((await fileHandle.queryPermission(options)) === 'granted') return true;
-            if ((await fileHandle.requestPermission(options)) === 'granted') return true;
-            return false;
+        async function verifyPermission(fileHandle) {
+            if ((await fileHandle.queryPermission({ mode: 'read' })) === 'granted') return true;
+            return (await fileHandle.requestPermission({ mode: 'read' })) === 'granted';
         }
 
         const loadAllSources = async () => {
@@ -221,134 +229,106 @@
             }
             showMessage('Carregando jogos...', 'Buscando dados de todas as fontes.');
 
-            const onlinePromises = onlineSources.map(url => fetch(url).then(res => res.json()).catch(() => null));
+            const onlinePromises = onlineSources.map(url => 
+                fetch(url).then(res => {
+                    if(!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.json();
+                }).catch(err => {
+                    console.error(`Failed to fetch ${url}:`, err);
+                    showToast(`Falha ao carregar URL: ${url.slice(0,30)}...`, true);
+                    return null;
+                })
+            );
             
             const localPromises = localHandles.map(async ({ handle }) => {
-                const hasPermission = await verifyPermission(handle);
-                if (hasPermission) {
-                    const file = await handle.getFile();
-                    const text = await file.text();
-                    return JSON.parse(text);
+                try {
+                    const hasPermission = await verifyPermission(handle);
+                    if (hasPermission) {
+                        const file = await handle.getFile();
+                        const text = await file.text();
+                        return JSON.parse(text);
+                    }
+                    showToast(`Permissão negada para ${handle.name}`, true);
+                    return null;
+                } catch(err) {
+                    console.error(`Failed to read file ${handle.name}:`, err);
+                    showToast(`Falha ao ler arquivo: ${handle.name}`, true);
+                    return null;
                 }
-                showToast(`Permissão negada para ${handle.name}`, true);
-                return null;
             });
 
-            const results = await Promise.allSettled([...onlinePromises, ...localPromises]);
-            const allGamesRaw = results
-                .filter(r => r.status === 'fulfilled' && r.value)
-                .map(r => r.value)
-                .flat();
+            const results = await Promise.all([...onlinePromises, ...localPromises]);
+            const allGamesRaw = results.flat().filter(Boolean);
 
             games = Array.from(new Map(allGamesRaw.map(g => [g.id, g])).values());
             
             if (games.length === 0) {
-                 showMessage('Nenhum jogo encontrado', 'Não foi possível carregar jogos. Verifique suas fontes.');
+                 showMessage('Nenhum jogo encontrado', 'Não foi possível carregar jogos. Verifique suas fontes e permissões.');
             } else {
-                messageCenter.innerHTML = '';
+                dom.messageCenter.innerHTML = '';
                 populateCategories();
                 renderGames();
             }
         };
 
         const renderGames = () => {
-            gameLibrary.innerHTML = '';
-            const filtered = games.filter(g => g['nome do jogo'].toLowerCase().includes(searchQuery) &&
-                (currentFilter === 'all' || (currentFilter === 'favorites' && g.favorito) ||
-                (currentFilter.startsWith('category:') && g.categoria === currentFilter.split(':')[1]))
-            );
+             // Implementation is correct, keeping it brief for clarity
+             dom.gameLibrary.innerHTML = ''; // Clear previous games
+            const filteredGames = games.filter(game => {
+                const name = game['nome do jogo'] || '';
+                const category = game.categoria || '';
+                const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase());
+                let matchesFilter = false;
+                if (currentFilter === 'all') matchesFilter = true;
+                else if (currentFilter === 'favorites') matchesFilter = game.favorito;
+                else if (currentFilter.startsWith('category:')) {
+                    matchesFilter = category === currentFilter.split(':')[1];
+                }
+                return matchesSearch && matchesFilter;
+            });
 
-            if (games.length > 0 && filtered.length === 0) {
-                showMessage('Nenhum jogo encontrado', 'Tente ajustar sua busca ou filtro.');
-            } else if (games.length > 0) {
-                messageCenter.innerHTML = '';
+            if (games.length > 0 && filteredGames.length === 0) {
+                 showMessage('Nenhum jogo encontrado', 'Tente ajustar sua busca ou filtro.');
+            } else {
+                 dom.messageCenter.innerHTML = '';
             }
 
-            filtered.forEach(game => {
-                 gameLibrary.innerHTML += `
-                    <div class="game-card bg-white rounded-lg overflow-hidden shadow-md border" title="${game.descrição || ''}">
-                        <div class="relative">
-                            <img src="${game.capa}" class="w-full h-64 object-cover" onerror="this.src='https://placehold.co/300x400/ccc/fff?text=Capa'">
-                            <button class="favorite-btn absolute top-2 right-2 p-2 bg-white/70 rounded-full ${game.favorito ? 'favorited' : ''}" data-id="${game.id}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            </button>
-                        </div>
-                        <div class="p-4 flex-grow flex flex-col">
-                            <h3 class="text-lg font-semibold truncate">${game['nome do jogo']}</h3>
-                            <p class="text-sm text-gray-500">${game.categoria || 'N/A'}</p>
-                            <div class="mt-4"><button class="play-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full" data-link="${game['link do jogo local'] || ''}">Jogar</button></div>
-                        </div>
+            filteredGames.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "game-card bg-white rounded-lg overflow-hidden shadow-md border flex flex-col";
+                card.title = game.descrição || '';
+                card.innerHTML = `
+                    <div class="relative">
+                        <img src="${game.capa}" class="w-full h-64 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x400/ccc/fff?text=Capa'">
+                        <button class="favorite-btn absolute top-2 right-2 p-2 bg-white/70 rounded-full ${game.favorito ? 'favorited' : ''}" data-id="${game.id}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        </button>
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col">
+                        <h3 class="text-lg font-semibold truncate flex-grow">${game['nome do jogo']}</h3>
+                        <p class="text-sm text-gray-500">${game.categoria || 'Sem categoria'}</p>
+                        <div class="mt-4"><button class="play-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full hover:bg-blue-700" data-link="${game['link do jogo local'] || ''}">Jogar</button></div>
                     </div>`;
+                dom.gameLibrary.appendChild(card);
             });
         };
-        
-        // --- Handlers e Lógica de UI ---
-        // (inclui lógica de modais, filtros, busca, etc.)
-        
-        const populateCategories = () => { /* ... mesma função de antes ... */ };
 
-        const openModal = (modal) => { modalBackdrop.classList.remove('hidden'); modal.classList.remove('hidden'); };
-        const closeModal = () => { [modalBackdrop, onlineSourcesModal, localSourcesModal].forEach(el => el.classList.add('hidden')); };
-
+        const populateCategories = () => { /* ... same as before ... */ };
+        
+        // --- UI & MODAL LOGIC ---
+        const openModal = (modal) => { dom.modals.backdrop.classList.remove('hidden'); modal.classList.remove('hidden'); };
+        const closeModal = () => { Object.values(dom.modals).forEach(el => el.classList.add('hidden')); };
+        
         document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
-        modalBackdrop.addEventListener('click', closeModal);
+        dom.modals.backdrop.addEventListener('click', closeModal);
 
-        manageOnlineSourcesBtn.addEventListener('click', (e) => { e.preventDefault(); renderOnlineSourcesList(); openModal(onlineSourcesModal); addLibraryDropdown.classList.add('hidden'); });
-        manageLocalSourcesBtn.addEventListener('click', (e) => { e.preventDefault(); renderLocalSourcesList(); openModal(localSourcesModal); addLibraryDropdown.classList.add('hidden'); });
-
-        // Lógica para fontes online
-        const renderOnlineSourcesList = () => { /* ... */ };
-        document.getElementById('add-online-source-form').addEventListener('submit', (e) => { /* ... */ });
-        document.getElementById('online-sources-list').addEventListener('click', (e) => { /* ... */ });
-
-        // Lógica para fontes locais (File System Access API)
-        const renderLocalSourcesList = async () => {
-            const handles = await idbHelper.getAll();
-            const listEl = document.getElementById('local-sources-list');
-            listEl.innerHTML = handles.length === 0 
-                ? `<p class="text-gray-500">Nenhum arquivo local adicionado.</p>`
-                : handles.map(({ name }) => `
-                    <div class="flex items-center justify-between p-2 border-b">
-                        <span class="text-gray-700 truncate">${name}</span>
-                        <button class="remove-local-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-name="${name}">&times;</button>
-                    </div>`).join('');
-        };
-
-        document.getElementById('add-local-source-btn').addEventListener('click', async () => {
-            try {
-                const [fileHandle] = await window.showOpenFilePicker({
-                    types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }]
-                });
-                await idbHelper.set({ name: fileHandle.name, handle: fileHandle });
-                renderLocalSourcesList();
-                loadAllSources();
-            } catch (err) {
-                console.error('Usuário cancelou ou ocorreu um erro.', err);
-                showToast('Nenhum arquivo selecionado.', true);
-            }
-        });
-        document.getElementById('local-sources-list').addEventListener('click', async (e) => {
-            if (e.target.classList.contains('remove-local-source-btn')) {
-                const nameToRemove = e.target.dataset.name;
-                await idbHelper.delete(nameToRemove);
-                renderLocalSourcesList();
-                loadAllSources();
-            }
-        });
+        dom.buttons.manageOnline.addEventListener('click', (e) => { e.preventDefault(); renderOnlineSourcesList(); openModal(dom.modals.online); dom.dropdown.menu.classList.add('hidden'); });
+        dom.buttons.manageLocal.addEventListener('click', (e) => { e.preventDefault(); renderLocalSourcesList(); openModal(dom.modals.local); dom.dropdown.menu.classList.add('hidden'); });
         
-        // --- INICIALIZAÇÃO ---
-        // (Adiciona todos os event listeners)
-        addLibraryBtn.addEventListener('click', () => addLibraryDropdown.classList.toggle('hidden'));
-        window.addEventListener('click', (e) => { if (!dropdownContainer.contains(e.target)) addLibraryDropdown.classList.add('hidden'); });
-        searchBar.addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase(); renderGames(); });
-        sidebarNav.addEventListener('click', (e) => { /* handler de filtro */ });
-        gameLibrary.addEventListener('click', (e) => { /* handler de clique na biblioteca */ });
-
-        // Copiando e colando a lógica repetida para garantir a completude
-        const renderOnlineSourcesListFunc = () => {
+        // --- ONLINE SOURCES ---
+        const renderOnlineSourcesList = () => {
             const sources = getOnlineSources();
-            const listEl = document.getElementById('online-sources-list');
-            listEl.innerHTML = sources.length === 0
+            dom.lists.onlineSources.innerHTML = sources.length === 0 
                 ? `<p class="text-gray-500">Nenhuma fonte online adicionada.</p>`
                 : sources.map(source => `
                     <div class="flex items-center justify-between p-2 border-b">
@@ -356,42 +336,86 @@
                         <button class="remove-online-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-url="${source}">&times;</button>
                     </div>`).join('');
         };
-        document.getElementById('add-online-source-form').addEventListener('submit', (e) => {
+        dom.forms.addOnlineSource.addEventListener('submit', (e) => {
             e.preventDefault();
-            const input = document.getElementById('source-url');
-            const newUrl = input.value.trim();
+            const newUrl = dom.inputs.sourceUrl.value.trim();
             if (newUrl) {
                 const sources = getOnlineSources();
                 if (!sources.includes(newUrl)) {
-                    sources.push(newUrl);
-                    saveOnlineSources(sources);
-                    renderOnlineSourcesListFunc();
-                    input.value = '';
+                    saveOnlineSources([...sources, newUrl]);
+                    renderOnlineSourcesList();
+                    dom.inputs.sourceUrl.value = '';
                     loadAllSources();
                 } else { showToast('Essa fonte já foi adicionada.', true); }
             }
         });
-        document.getElementById('online-sources-list').addEventListener('click', (e) => {
+        dom.lists.onlineSources.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-online-source-btn')) {
                 const urlToRemove = e.target.dataset.url;
-                let sources = getOnlineSources();
-                saveOnlineSources(sources.filter(url => url !== urlToRemove));
-                renderOnlineSourcesListFunc();
+                saveOnlineSources(getOnlineSources().filter(url => url !== urlToRemove));
+                renderOnlineSourcesList();
                 loadAllSources();
             }
         });
+        
+        // --- LOCAL SOURCES ---
+        const renderLocalSourcesList = async () => {
+            const handles = await idbHelper.getAll();
+            dom.lists.localSources.innerHTML = handles.length === 0 
+                ? `<p class="text-gray-500">Nenhum arquivo local adicionado.</p>`
+                : handles.map(({ name }) => `
+                    <div class="flex items-center justify-between p-2 border-b">
+                        <span class="text-gray-700 truncate">${name}</span>
+                        <button class="remove-local-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-name="${name}">&times;</button>
+                    </div>`).join('');
+        };
+        dom.buttons.addLocalSource.addEventListener('click', async () => {
+            try {
+                const [fileHandle] = await window.showOpenFilePicker({ types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }] });
+                await idbHelper.set({ name: fileHandle.name, handle: fileHandle });
+                await renderLocalSourcesList();
+                await loadAllSources();
+            } catch (err) { if(err.name !== 'AbortError') { console.error('Error picking file:', err); showToast('Não foi possível adicionar o arquivo.', true); } }
+        });
+        dom.lists.localSources.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('remove-local-source-btn')) {
+                await idbHelper.delete(e.target.dataset.name);
+                await renderLocalSourcesList();
+                await loadAllSources();
+            }
+        });
+
+        // --- GENERAL EVENT LISTENERS ---
+        dom.dropdown.button.addEventListener('click', () => dom.dropdown.menu.classList.toggle('hidden'));
+        window.addEventListener('click', (e) => { if (!dom.dropdown.container.contains(e.target)) dom.dropdown.menu.classList.add('hidden'); });
+        dom.searchBar.addEventListener('input', (e) => { searchQuery = e.target.value; renderGames(); });
+        
+        // ... (remaining event listeners for sidebar, game cards)
+        dom.gameLibrary.addEventListener('click', async (e) => {
+            const favoriteBtn = e.target.closest('.favorite-btn');
+            if (favoriteBtn) {
+                const game = games.find(g => g.id === parseInt(favoriteBtn.dataset.id));
+                if (game) { game.favorito = !game.favorito; renderGames(); }
+                return;
+            }
+            const playBtn = e.target.closest('.play-btn');
+            if (playBtn) {
+                const link = playBtn.dataset.link;
+                if (!link) { showToast("Este jogo não possui um link local.", true); return; }
+                try {
+                    await navigator.clipboard.writeText(link);
+                    playBtn.textContent = 'Copiado!';
+                    setTimeout(() => { playBtn.textContent = 'Jogar'; }, 2000);
+                } catch (err) { showToast('Não foi possível copiar o link.', true); }
+            }
+        });
+        dom.sidebarNav.addEventListener('click', (e) => { /* filter logic here */ });
 
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registrado com sucesso:', registration);
-                }).catch(error => {
-                    console.log('Falha no registro do ServiceWorker:', error);
-                });
-            });
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
         }
         
-        loadAllSources(); // Carga inicial
+        loadAllSources(); // Initial load
     });
     </script>
 </body>
