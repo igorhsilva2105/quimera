@@ -6,7 +6,6 @@ const urlsToCache = [
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
 ];
 
-// Evento de instalação: abre o cache e adiciona os arquivos principais
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -17,23 +16,15 @@ self.addEventListener('install', event => {
   );
 });
 
-// Evento de fetch: serve os arquivos do cache se disponíveis
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Se encontrar no cache, retorna
-        if (response) {
-          return response;
-        }
-        // Senão, busca na rede
-        return fetch(event.request);
-      }
-    )
+        return response || fetch(event.request);
+      })
   );
 });
 
-// Evento de ativação: limpa caches antigos
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
