@@ -1,0 +1,21 @@
+{
+  "name": "GameVault - Agregador de Bibliotecas",
+  "short_name": "GameVault",
+  "description": "Sua biblioteca de jogos pessoal, agregando fontes online e locais.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a73e8",
+  "icons": [
+    {
+      "src": "https://placehold.co/192x192/1a73e8/ffffff?text=GV",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/512x512/1a73e8/ffffff?text=GV",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

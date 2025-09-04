@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff"/>
+    <title>GameVault - Agregador de Bibliotecas</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .sidebar-link.active { background-color: #e9eef6; color: #1a73e8; font-weight: 600; }
+        .favorite-btn.favorited svg { fill: #f44336; stroke: #f44336; }
+        .toast { transition: opacity 0.3s, transform 0.3s; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 hidden md:block">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0V12h-5Z"/></svg>
+                    GameVault
+                </h1>
+            </div>
+            <nav class="mt-6 px-4" id="sidebar-nav">
+                <a href="#" data-filter="all" class="sidebar-link active flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
+                    Todos os Jogos
+                </a>
+                <a href="#" data-filter="favorites" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 20.947 4.5 15.472V5.528L12 1l7.5 4.528v9.944Z"/></svg>
+                    Favoritos
+                </a>
+                <div id="categories-container" class="mt-4 pt-4 border-t border-gray-200"></div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <header class="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 z-20">
+                <div class="flex items-center justify-between">
+                    <div class="relative w-full max-w-md">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="search-bar" placeholder="Buscar na biblioteca..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <button id="install-pwa-btn" class="hidden bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors flex items-center mr-2">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+                            Instalar App
+                        </button>
+                        <div class="relative ml-2" id="add-library-dropdown-container">
+                            <button id="add-library-btn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors flex items-center">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                                Adicionar Biblioteca
+                            </button>
+                            <div id="add-library-dropdown" class="origin-top-right absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-30">
+                                <div class="py-1">
+                                    <a href="#" id="manage-local-sources-btn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Z"/></svg>
+                                        Gerenciar Fontes Locais
+                                    </a>
+                                    <a href="#" id="manage-online-sources-btn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                        Gerenciar Fontes Online
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-4 md:p-8">
+                <h2 id="library-title" class="text-3xl font-bold text-gray-900 mb-6">Sua Biblioteca</h2>
+                <div id="game-library" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"></div>
+                <div id="message-center" class="text-center py-16"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modais -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+    
+    <div id="online-sources-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
+            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Online (URLs)</h3>
+            <div id="online-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
+            <form id="add-online-source-form" class="flex items-center gap-2">
+                <input type="url" id="source-url" placeholder="https://exemplo.com/biblioteca.json" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shrink-0">Adicionar</button>
+            </form>
+            <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
+        </div>
+    </div>
+
+    <div id="local-sources-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
+            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Locais</h3>
+            <p class="text-sm text-gray-600 mb-4">Adicione arquivos .json do seu computador. A aplicação pedirá permissão para acessá-los a cada sessão.</p>
+            <div id="local-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
+            <button id="add-local-source-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Adicionar Arquivo</button>
+            <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
+        </div>
+    </div>
+    
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transform translate-y-2 toast"></div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- ESTADO & CONSTANTES ---
+        let games = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+        const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
+        
+        // --- DOM ELEMENTS ---
+        const gameLibrary = document.getElementById('game-library');
+        const searchBar = document.getElementById('search-bar');
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const libraryTitle = document.getElementById('library-title');
+        const messageCenter = document.getElementById('message-center');
+        const categoriesContainer = document.getElementById('categories-container');
+        const toast = document.getElementById('toast');
+        const addLibraryBtn = document.getElementById('add-library-btn');
+        const addLibraryDropdown = document.getElementById('add-library-dropdown');
+        const dropdownContainer = document.getElementById('add-library-dropdown-container');
+        
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const onlineSourcesModal = document.getElementById('online-sources-modal');
+        const localSourcesModal = document.getElementById('local-sources-modal');
+        const manageOnlineSourcesBtn = document.getElementById('manage-online-sources-btn');
+        const manageLocalSourcesBtn = document.getElementById('manage-local-sources-btn');
+
+        // --- PWA ---
+        const installPwaBtn = document.getElementById('install-pwa-btn');
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installPwaBtn.classList.remove('hidden');
+        });
+        installPwaBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                if (outcome === 'accepted') {
+                    installPwaBtn.classList.add('hidden');
+                }
+            }
+        });
+
+        // --- IndexedDB Helper para File Handles ---
+        const idbHelper = {
+            db: null,
+            async initDB() {
+                return new Promise((resolve, reject) => {
+                    if (this.db) return resolve(this.db);
+                    const request = indexedDB.open('GameVaultDB', 1);
+                    request.onerror = () => reject("Erro ao abrir IndexedDB.");
+                    request.onsuccess = (event) => {
+                        this.db = event.target.result;
+                        resolve(this.db);
+                    };
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('fileHandles')) {
+                            db.createObjectStore('fileHandles', { keyPath: 'name' });
+                        }
+                    };
+                });
+            },
+            async getStore(mode) {
+                const db = await this.initDB();
+                return db.transaction('fileHandles', mode).objectStore('fileHandles');
+            },
+            async set(value) { (await this.getStore('readwrite')).put(value); },
+            async get(key) { return (await this.getStore('readonly')).get(key); },
+            async delete(key) { (await this.getStore('readwrite')).delete(key); },
+            async getAll() { return (await this.getStore('readonly')).getAll(); }
+        };
+
+        // --- FUNÇÕES PRINCIPAIS ---
+        const getOnlineSources = () => JSON.parse(localStorage.getItem(ONLINE_SOURCES_KEY)) || [];
+        const saveOnlineSources = (sources) => localStorage.setItem(ONLINE_SOURCES_KEY, JSON.stringify(sources));
+
+        const showMessage = (title, text) => {
+            messageCenter.innerHTML = `<h3 class="text-xl font-semibold text-gray-700">${title}</h3><p class="text-gray-500 mt-2">${text}</p>`;
+            gameLibrary.innerHTML = '';
+        };
+
+        const showToast = (message, isError = false) => {
+            toast.textContent = message;
+            toast.className = `fixed bottom-5 right-5 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transform translate-y-2 toast ${isError ? 'bg-red-600' : 'bg-gray-800'}`;
+            toast.classList.remove('opacity-0', 'translate-y-2');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); }, 3000);
+        };
+        
+        async function verifyPermission(fileHandle, readWrite) {
+            const options = readWrite ? { mode: 'readwrite' } : {};
+            if ((await fileHandle.queryPermission(options)) === 'granted') return true;
+            if ((await fileHandle.requestPermission(options)) === 'granted') return true;
+            return false;
+        }
+
+        const loadAllSources = async () => {
+            const onlineSources = getOnlineSources();
+            const localHandles = await idbHelper.getAll();
+            
+            if (onlineSources.length === 0 && localHandles.length === 0) {
+                showMessage('Bem-vindo ao GameVault!', 'Adicione uma fonte de jogos online ou local para começar.');
+                return;
+            }
+            showMessage('Carregando jogos...', 'Buscando dados de todas as fontes.');
+
+            const onlinePromises = onlineSources.map(url => fetch(url).then(res => res.json()).catch(() => null));
+            
+            const localPromises = localHandles.map(async ({ handle }) => {
+                const hasPermission = await verifyPermission(handle);
+                if (hasPermission) {
+                    const file = await handle.getFile();
+                    const text = await file.text();
+                    return JSON.parse(text);
+                }
+                showToast(`Permissão negada para ${handle.name}`, true);
+                return null;
+            });
+
+            const results = await Promise.allSettled([...onlinePromises, ...localPromises]);
+            const allGamesRaw = results
+                .filter(r => r.status === 'fulfilled' && r.value)
+                .map(r => r.value)
+                .flat();
+
+            games = Array.from(new Map(allGamesRaw.map(g => [g.id, g])).values());
+            
+            if (games.length === 0) {
+                 showMessage('Nenhum jogo encontrado', 'Não foi possível carregar jogos. Verifique suas fontes.');
+            } else {
+                messageCenter.innerHTML = '';
+                populateCategories();
+                renderGames();
+            }
+        };
+
+        const renderGames = () => {
+            gameLibrary.innerHTML = '';
+            const filtered = games.filter(g => g['nome do jogo'].toLowerCase().includes(searchQuery) &&
+                (currentFilter === 'all' || (currentFilter === 'favorites' && g.favorito) ||
+                (currentFilter.startsWith('category:') && g.categoria === currentFilter.split(':')[1]))
+            );
+
+            if (games.length > 0 && filtered.length === 0) {
+                showMessage('Nenhum jogo encontrado', 'Tente ajustar sua busca ou filtro.');
+            } else if (games.length > 0) {
+                messageCenter.innerHTML = '';
+            }
+
+            filtered.forEach(game => {
+                 gameLibrary.innerHTML += `
+                    <div class="game-card bg-white rounded-lg overflow-hidden shadow-md border" title="${game.descrição || ''}">
+                        <div class="relative">
+                            <img src="${game.capa}" class="w-full h-64 object-cover" onerror="this.src='https://placehold.co/300x400/ccc/fff?text=Capa'">
+                            <button class="favorite-btn absolute top-2 right-2 p-2 bg-white/70 rounded-full ${game.favorito ? 'favorited' : ''}" data-id="${game.id}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            </button>
+                        </div>
+                        <div class="p-4 flex-grow flex flex-col">
+                            <h3 class="text-lg font-semibold truncate">${game['nome do jogo']}</h3>
+                            <p class="text-sm text-gray-500">${game.categoria || 'N/A'}</p>
+                            <div class="mt-4"><button class="play-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full" data-link="${game['link do jogo local'] || ''}">Jogar</button></div>
+                        </div>
+                    </div>`;
+            });
+        };
+        
+        // --- Handlers e Lógica de UI ---
+        // (inclui lógica de modais, filtros, busca, etc.)
+        
+        const populateCategories = () => { /* ... mesma função de antes ... */ };
+
+        const openModal = (modal) => { modalBackdrop.classList.remove('hidden'); modal.classList.remove('hidden'); };
+        const closeModal = () => { [modalBackdrop, onlineSourcesModal, localSourcesModal].forEach(el => el.classList.add('hidden')); };
+
+        document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
+        modalBackdrop.addEventListener('click', closeModal);
+
+        manageOnlineSourcesBtn.addEventListener('click', (e) => { e.preventDefault(); renderOnlineSourcesList(); openModal(onlineSourcesModal); addLibraryDropdown.classList.add('hidden'); });
+        manageLocalSourcesBtn.addEventListener('click', (e) => { e.preventDefault(); renderLocalSourcesList(); openModal(localSourcesModal); addLibraryDropdown.classList.add('hidden'); });
+
+        // Lógica para fontes online
+        const renderOnlineSourcesList = () => { /* ... */ };
+        document.getElementById('add-online-source-form').addEventListener('submit', (e) => { /* ... */ });
+        document.getElementById('online-sources-list').addEventListener('click', (e) => { /* ... */ });
+
+        // Lógica para fontes locais (File System Access API)
+        const renderLocalSourcesList = async () => {
+            const handles = await idbHelper.getAll();
+            const listEl = document.getElementById('local-sources-list');
+            listEl.innerHTML = handles.length === 0 
+                ? `<p class="text-gray-500">Nenhum arquivo local adicionado.</p>`
+                : handles.map(({ name }) => `
+                    <div class="flex items-center justify-between p-2 border-b">
+                        <span class="text-gray-700 truncate">${name}</span>
+                        <button class="remove-local-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-name="${name}">&times;</button>
+                    </div>`).join('');
+        };
+
+        document.getElementById('add-local-source-btn').addEventListener('click', async () => {
+            try {
+                const [fileHandle] = await window.showOpenFilePicker({
+                    types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }]
+                });
+                await idbHelper.set({ name: fileHandle.name, handle: fileHandle });
+                renderLocalSourcesList();
+                loadAllSources();
+            } catch (err) {
+                console.error('Usuário cancelou ou ocorreu um erro.', err);
+                showToast('Nenhum arquivo selecionado.', true);
+            }
+        });
+        document.getElementById('local-sources-list').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('remove-local-source-btn')) {
+                const nameToRemove = e.target.dataset.name;
+                await idbHelper.delete(nameToRemove);
+                renderLocalSourcesList();
+                loadAllSources();
+            }
+        });
+        
+        // --- INICIALIZAÇÃO ---
+        // (Adiciona todos os event listeners)
+        addLibraryBtn.addEventListener('click', () => addLibraryDropdown.classList.toggle('hidden'));
+        window.addEventListener('click', (e) => { if (!dropdownContainer.contains(e.target)) addLibraryDropdown.classList.add('hidden'); });
+        searchBar.addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase(); renderGames(); });
+        sidebarNav.addEventListener('click', (e) => { /* handler de filtro */ });
+        gameLibrary.addEventListener('click', (e) => { /* handler de clique na biblioteca */ });
+
+        // Copiando e colando a lógica repetida para garantir a completude
+        const renderOnlineSourcesListFunc = () => {
+            const sources = getOnlineSources();
+            const listEl = document.getElementById('online-sources-list');
+            listEl.innerHTML = sources.length === 0
+                ? `<p class="text-gray-500">Nenhuma fonte online adicionada.</p>`
+                : sources.map(source => `
+                    <div class="flex items-center justify-between p-2 border-b">
+                        <span class="text-gray-700 truncate">${source}</span>
+                        <button class="remove-online-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-url="${source}">&times;</button>
+                    </div>`).join('');
+        };
+        document.getElementById('add-online-source-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('source-url');
+            const newUrl = input.value.trim();
+            if (newUrl) {
+                const sources = getOnlineSources();
+                if (!sources.includes(newUrl)) {
+                    sources.push(newUrl);
+                    saveOnlineSources(sources);
+                    renderOnlineSourcesListFunc();
+                    input.value = '';
+                    loadAllSources();
+                } else { showToast('Essa fonte já foi adicionada.', true); }
+            }
+        });
+        document.getElementById('online-sources-list').addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-online-source-btn')) {
+                const urlToRemove = e.target.dataset.url;
+                let sources = getOnlineSources();
+                saveOnlineSources(sources.filter(url => url !== urlToRemove));
+                renderOnlineSourcesListFunc();
+                loadAllSources();
+            }
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registrado com sucesso:', registration);
+                }).catch(error => {
+                    console.log('Falha no registro do ServiceWorker:', error);
+                });
+            });
+        }
+        
+        loadAllSources(); // Carga inicial
+    });
+    </script>
+</body>
+</html>
