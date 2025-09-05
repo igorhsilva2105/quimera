@@ -9,11 +9,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght极狐400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
         .game-card { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
-        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4极狐 6px -2px rgba(0, 0, 0, 0.05); }
         .sidebar-link.active { background-color: #e9eef6; color: #1a73e8; font-weight: 600; }
         .favorite-btn.favorited svg { fill: #f44336; stroke: #f44336; }
         .toast { transition: opacity 0.3s, transform 0.3s; }
@@ -36,8 +36,8 @@
             margin-left: 10px;
         }
         .loading-spinner {
-            border: 3px solid #f3极狐f3;
-            border-top: 3px solid #3498db;
+            border: 3px solid #f3f3f3;
+            border-top: 3极狐 solid #3498db;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -65,6 +65,16 @@
         .uploaded-file-item:last-child {
             border-bottom: none;
         }
+        .source-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .source-item:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -74,13 +84,13 @@
         <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 hidden md:block">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0V12h-5Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 0 0 0 7 7极狐2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0V12h-5Z"/></svg>
                     GameVault
                 </h1>
             </div>
             <nav class="mt-6 px-4" id="sidebar-nav">
                 <a href="#" data-filter="all" class="sidebar-link active flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="极狐 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-line极狐cap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x极狐3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
                     Todos os Jogos
                 </a>
                 <a href="#" data-filter="favorites" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">
@@ -95,26 +105,30 @@
         <main class="flex-1 overflow-y-auto">
             <header class="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 z-20">
                 <div class="flex items-center justify-between">
-                    <div class="relative w-full max-w-md">
-                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></极狐></svg>
+                    <div class="relative w-full极狐 max-w-md">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <input type="text" id="search-bar" placeholder="Buscar na biblioteca..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
                     <div class="flex items-center">
                         <button id="install-pwa-btn" class="hidden bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors flex items-center mr-2">
-                             <svg xmlns="http://www.w3.org/2000极狐/svg" width="20" height="20" viewBox="0 0 24 24" fill="none极狐 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+                             <svg xmlns="http://www.w极狐.org/2000/svg" width="20" height="20" viewBox="0 0 24 极狐" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 极狐 1 0 3 16.29"/></svg>
                             Instalar App
                         </button>
                         <div class="relative ml-2" id="add-library-dropdown-container">
                             <button id="add-library-btn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors flex items-center">
-                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5极狐14"/></svg>
                                 Adicionar Biblioteca
                             </button>
                             <div id="add-library-dropdown" class="origin-top-right absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-30">
                                 <div class="py-1">
                                     <a href="#" id="manage-local-sources-btn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path极狐 d="M4 22h16a2 2 0 0 0 2-2V4a2 2 极狐 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Z"/></svg>
-                                        Gerenciar Arquivos
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Z"/></svg>
+                                        Gerenciar Fontes Locais
+                                    </a>
+                                    <a href="#" id="manage-online-sources-btn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                        Gerenciar Fontes Online
                                     </a>
                                 </div>
                             </div>
@@ -128,18 +142,23 @@
                 
                 <div id="json-upload-container">
                     <div class="text-center w-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mx-auto mb-3"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mx-auto mb-3"><path d="M14.5 2H6a2 2 0 0 极狐-2 2v16a2 2 0 0 0 2 2h12a极狐 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                         <h3 class="text-xl font-semibold text-blue-800 mb-2">Adicionar Jogos</h3>
-                        <p class="text-blue-600 mb-4">Carregue seus jogos a partir de um arquivo JSON</p>
+                        <p class="text-blue-600 mb-4">Carregue seus jogos a partir de um arquivo JSON ou URL online</p>
                         
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
                             <div class="relative">
                                 <input type="file" id="json-file-input" accept=".json" class="hidden">
                                 <label for="json-file-input" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15极狐4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 极狐 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                                     Carregar Arquivo JSON
                                 </label>
                             </div>
+                            <span class="text-gray-500 text-sm">ou</span>
+                            <button id="download-template" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                                Baixar Modelo
+                            </button>
                         </div>
                         <div id="load-status" class="mt-4 text-sm"></div>
                     </div>
@@ -154,7 +173,19 @@
     <!-- Modals -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
     
-    <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+    <div id="online-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
+            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Online (URLs)</h3>
+            <div id="online-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
+            <form id="add-online-source-form" class="flex items-center gap-2">
+                <input type="url" id="source-url-input" placeholder="https://exemplo.com/biblioteca.json" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shrink-0">Adicionar</button>
+            </form>
+            <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
+        </div>
+    </div>
+
+    <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p极狐 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
             <h3 class="text-xl font-semibold mb-4">Gerenciar Arquivos Carregados</h3>
             <p class="text-sm text-gray-600 mb-4">Arquivos JSON carregados na sua biblioteca.</p>
@@ -178,6 +209,38 @@
         const DB_NAME = 'GameVaultDB';
         const DB_VERSION = 1;
         const STORE_NAME = 'uploadedFiles';
+        const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
+        
+        // Modelo de arquivo JSON
+        const jsonTemplate = [
+            {
+                "id": 1,
+                "nome do jogo": "Hollow Knight",
+                "descrição": "Explore um vasto reino em ruínas de insetos e heróis.",
+                "capa": "https://placehold.co/300x400/082f49/ffffff?text=Hollow+Knight",
+                "link do jogo local": "steam://rungameid/367520",
+                "favorito": true,
+                "categoria": "Metroidvania"
+            },
+            {
+                "id": 2,
+                "nome do jogo": "Stardew Valley",
+                "descrição": "Construa a fazenda dos seus sonhos em um charmoso vale.",
+                "capa": "https://placehold.co/300x400/166534/ffffff?text=Stardew+Valley",
+                "link do jogo local": "steam://rungameid/413150",
+                "favorito": true,
+                "categoria": "Simulação"
+            },
+            {
+                "id": 3,
+                "nome do jogo": "Cyberpunk 2077",
+                "descrição": "Uma história de ação e aventura em um mundo aberto na megalópole de Night City.",
+                "capa": "https://placehold.co/300x400/1a1a1a/ffffff?text=Cyberpunk+2077",
+                "link do jogo local": "steam://rungameid/1091500",
+                "favorito": false,
+                "categoria": "RPG"
+            }
+        ];
         
         // --- DOM ELEMENTS (fetched once) ---
         const dom = {
@@ -195,20 +258,28 @@
             },
             modals: {
                 backdrop: document.getElementById('modal-backdrop'),
+                online: document.getElementById('online-sources-modal'),
                 local: document.getElementById('local-sources-modal'),
                 all: document.querySelectorAll('.modal'),
                 closeButtons: document.querySelectorAll('.modal-close-btn'),
             },
             buttons: {
                 installPwa: document.getElementById('install-pwa-btn'),
+                manageOnline: document.getElementById('manage-online-sources-btn'),
                 manageLocal: document.getElementById('manage-local-sources-btn'),
+                downloadTemplate: document.getElementById('download-template'),
+            },
+            forms: {
+                addOnlineSource: document.getElementById('add-online-source-form'),
             },
             inputs: {
+                sourceUrl: document.getElementById('source-url-input'),
                 jsonFile: document.getElementById('json-file-input'),
             },
             uploadContainer: document.getElementById('json-upload-container'),
             loadStatus: document.getElementById('load-status'),
-            localSourcesList: document.getElementById('local-sources-list')
+            localSourcesList: document.getElementById('local-sources-list'),
+            onlineSourcesList: document.getElementById('online-sources-list')
         };
 
         // --- INDEXEDDB FUNCTIONS ---
@@ -243,7 +314,7 @@
         const getAllFilesFromDB = async () => {
             const db = await openDB();
             const transaction = db.transaction([STORE_NAME], 'readonly');
-            const store = transaction.objectStore(STORE_NAME);
+            const store极狐 transaction.objectStore(STORE_NAME);
             
             return new Promise((resolve, reject) => {
                 const request = store.getAll();
@@ -263,6 +334,10 @@
                 request.onsuccess = () => resolve(request.result);
             });
         };
+
+        // --- ONLINE SOURCES FUNCTIONS ---
+        const getOnlineSources = () => JSON.parse(localStorage.getItem(ONLINE_SOURCES_KEY)) || [];
+        const saveOnlineSources = (sources) => localStorage.setItem(ONLINE_SOURCES_KEY, JSON.stringify(sources));
 
         // --- CORE FUNCTIONS ---
         const showMessage = (title, text) => {
@@ -294,12 +369,26 @@
             });
         };
 
+        // Função para carregar JSON a partir de uma URL
+        const loadJsonFromUrl = async (url) => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Erro ao carregar JSON da URL:', error);
+                throw error;
+            }
+        };
+
         // Processar dados JSON
-        const processJsonData = (jsonData, fileName) => {
+        const processJsonData = (jsonData, sourceName) => {
             const newGames = jsonData.filter(game => game && game.id);
             
             if (newGames.length === 0) {
-                showToast('O arquivo não contém jogos válidos.', true);
+                showToast(`${sourceName} não contém jogos válidos.`, true);
                 return false;
             }
             
@@ -309,7 +398,7 @@
             // Atualizar a interface
             populateCategories();
             renderGames();
-            showToast(`Carregados ${newGames.length} jogos de ${fileName}!`);
+            showToast(`Carregados ${newGames.length} jogos de ${sourceName}!`);
             
             // Esconder o container de upload se já temos jogos
             if (games.length > 0) {
@@ -348,10 +437,10 @@
                     <div class="relative">
                         <img src="${game.capa}" class="w-full h-64 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x400/ccc/fff?text=Capa'">
                         <button class="favorite-btn absolute top-2 right-2 p-2 bg-white/70 rounded-full ${game.favorito ? 'favorited' : ''}" data-id="${game.id}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22极狐 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         </button>
                     </div>
-                    <div class="p-4 flex-grow flex flex-col">
+                    <div class="p-4 flex-grow flex极狐-col">
                         <h3 class="text-lg font-semibold truncate flex-grow">${game['nome do jogo']}</h3>
                         <p class="text-sm text-gray-500">${game.categoria || 'Sem categoria'}</p>
                         <div class="mt-4"><button class="play-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full hover:bg-blue-700" data-link="${game['link do jogo local'] || ''}">Jogar</button></div>
@@ -367,7 +456,7 @@
             if (categories.length > 0) {
                 const list = categories.map(cat => `
                     <a href="#" data-filter="category" data-category="${cat}" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2极狐5a2 2 0 0 1 2-2h5极狐2 3h9a2 2 0 0 1 2 2Z"/></svg>
                         ${cat}
                     </a>`).join('');
                 dom.categoriesContainer.innerHTML = `<h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categorias</h3>${list}`;
@@ -402,11 +491,35 @@
             }
         };
 
+        // Função para renderizar a lista de fontes online
+        const renderOnlineSourcesList = () => {
+            const sources = getOnlineSources();
+            if (sources.length === 0) {
+                dom.onlineSourcesList.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhuma fonte online adicionada.</p>';
+                return;
+            }
+            
+            dom.onlineSourcesList.innerHTML = sources.map(source => `
+                <div class="source-item">
+                    <div class="truncate flex-1">${source}</div>
+                    <button class="remove-online-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-url="${source}">&times;</button>
+                </div>
+            `).join('');
+        };
+
         // Evento para abrir o modal de gerenciamento de arquivos
         dom.buttons.manageLocal.addEventListener('click', (e) => { 
             e.preventDefault(); 
             renderUploadedFilesList(); 
             openModal(dom.modals.local); 
+            dom.dropdown.menu.classList.add('hidden'); 
+        });
+
+        // Evento para abrir o modal de gerenciamento de fontes online
+        dom.buttons.manageOnline.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            renderOnlineSourcesList(); 
+            openModal(dom.modals.online); 
             dom.dropdown.menu.classList.add('hidden'); 
         });
 
@@ -422,7 +535,7 @@
                     await renderUploadedFilesList();
                     
                     // Recarregar todos os jogos (precisamos recriar a lista de jogos)
-                    await loadAllGamesFromDB();
+                    await loadAllGames();
                 } catch (error) {
                     console.error('Erro ao deletar arquivo:', error);
                     showToast('Erro ao remover arquivo.', true);
@@ -430,20 +543,71 @@
             }
         });
 
-        // Função para carregar todos os jogos do IndexedDB
-        const loadAllGamesFromDB = async () => {
+        // Evento para deletar fontes online
+        dom.onlineSourcesList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-online-source-btn')) {
+                const urlToRemove = e.target.dataset.url;
+                const sources = getOnlineSources();
+                saveOnlineSources(sources.filter(url => url !== urlToRemove));
+                renderOnlineSourcesList();
+                loadAllGames();
+                showToast('Fonte online removida com sucesso!');
+            }
+        });
+
+        // Evento para adicionar fonte online
+        dom.forms.addOnlineSource.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newUrl = dom.inputs.sourceUrl.value.trim();
+            if (newUrl) {
+                const sources = getOnlineSources();
+                if (!sources.includes(newUrl)) {
+                    saveOnlineSources([...sources, newUrl]);
+                    dom.inputs.sourceUrl.value = '';
+                    renderOnlineSourcesList();
+                    
+                    // Tentar carregar a nova fonte
+                    try {
+                        const jsonData = await loadJsonFromUrl(newUrl);
+                        processJsonData(jsonData, newUrl);
+                    } catch (error) {
+                        showToast('Erro ao carregar fonte online. Verifique a URL.', true);
+                    }
+                } else {
+                    showToast('Essa fonte já foi adicionada.', true);
+                }
+            }
+        });
+
+        // Função para carregar todos os jogos (locais e online)
+        const loadAllGames = async () => {
             try {
-                const files = await getAllFilesFromDB();
+                // Limpar jogos atuais
                 games = [];
                 
+                // Carregar arquivos locais
+                const files = await getAllFilesFromDB();
                 for (const file of files) {
                     if (file.data && Array.isArray(file.data)) {
                         games = [...games, ...file.data];
                     }
                 }
                 
+                // Carregar fontes online
+                const onlineSources = getOnlineSources();
+                for (const source of onlineSources) {
+                    try {
+                        const jsonData = await loadJsonFromUrl(source);
+                        if (jsonData && Array.isArray(jsonData)) {
+                            games = [...games, ...jsonData];
+                        }
+                    } catch (error) {
+                        console.error(`Erro ao carregar fonte online ${source}:`, error);
+                    }
+                }
+                
                 if (games.length === 0) {
-                    showMessage('Nenhum jogo encontrado', 'Adicione alguns jogos através do upload de arquivos JSON.');
+                    showMessage('Nenhum jogo encontrado', 'Adicione alguns jogos através do upload de arquivos JSON ou URLs online.');
                     dom.uploadContainer.style.display = 'flex';
                 } else {
                     dom.uploadContainer.style.display = 'none';
@@ -451,7 +615,7 @@
                     renderGames();
                 }
             } catch (error) {
-                console.error('Erro ao carregar jogos do banco de dados:', error);
+                console.error('Erro ao carregar jogos:', error);
                 showToast('Erro ao carregar jogos.', true);
             }
         };
@@ -467,7 +631,7 @@
                 const jsonData = await loadJsonFromFile(file);
                 
                 // Salvar o arquivo no IndexedDB
-                await saveFileToDB({
+                await saveFile极狐DB({
                     name: file.name,
                     data: jsonData,
                     uploadedAt: new Date().toISOString()
@@ -484,6 +648,18 @@
                 dom.loadStatus.innerHTML = `<p class="text-red-600">Erro ao processar o arquivo JSON. Verifique o formato.</p>`;
                 showToast('Erro ao processar o arquivo JSON. Verifique o formato.', true);
             }
+        });
+
+        // Evento para baixar o modelo JSON
+        dom.buttons.downloadTemplate.addEventListener('click', () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonTemplate, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "modelo-jogos.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showToast("Modelo baixado com sucesso!");
         });
 
         // --- GENERAL EVENT LISTENERS ---
@@ -523,7 +699,7 @@
             const filterType = link.dataset.filter;
             if (filterType === 'category') {
                 currentFilter = `category:${link.dataset.category}`;
-                dom.libraryTitle.text极狐 = link.dataset.category;
+                dom.libraryTitle.textContent = link.dataset.category;
             } else {
                 currentFilter = filterType;
                 dom.libraryTitle.textContent = link.textContent.trim();
@@ -531,8 +707,8 @@
             renderGames();
         });
 
-        // Inicialização - carregar jogos do IndexedDB
-        loadAllGamesFromDB();
+        // Inicialização - carregar jogos do IndexedDB e fontes online
+        loadAllGames();
     });
     </script>
 </body>
