@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1a73e8"/>
+    <meta name="theme-color" content="#ffffff"/>
     <title>GameVault - Agregador de Bibliotecas</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,68 +13,10 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
         .game-card { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
-        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4极狐 6px -2px rgba(0, 0, 0, 0.05); }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
         .sidebar-link.active { background-color: #e9eef6; color: #1a73e8; font-weight: 600; }
         .favorite-btn.favorited svg { fill: #f44336; stroke: #f44336; }
         .toast { transition: opacity 0.3s, transform 0.3s; }
-        #json-upload-container { 
-            display: flex; 
-            justify-content: center; 
-            margin-bottom: 20px; 
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            border: 2px dashed #38bdf8;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .feature-badge {
-            background: #1a73e8;
-            color: white;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-        .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3极狐 solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .browser-support-warning {
-            background-color: #fef3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-        .uploaded-file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .uploaded-file-item:last-child {
-            border-bottom: none;
-        }
-        .source-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .source-item:last-child {
-            border-bottom: none;
-        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -84,13 +26,13 @@
         <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 hidden md:block">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 0 0 0 7 7极狐2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0V12h-5Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0V12h-5Z"/></svg>
                     GameVault
                 </h1>
             </div>
             <nav class="mt-6 px-4" id="sidebar-nav">
                 <a href="#" data-filter="all" class="sidebar-link active flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-line极狐cap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x极狐3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
                     Todos os Jogos
                 </a>
                 <a href="#" data-filter="favorites" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">
@@ -105,19 +47,19 @@
         <main class="flex-1 overflow-y-auto">
             <header class="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 z-20">
                 <div class="flex items-center justify-between">
-                    <div class="relative w-full极狐 max-w-md">
+                    <div class="relative w-full max-w-md">
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <input type="text" id="search-bar" placeholder="Buscar na biblioteca..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
                     <div class="flex items-center">
                         <button id="install-pwa-btn" class="hidden bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors flex items-center mr-2">
-                             <svg xmlns="http://www.w极狐.org/2000/svg" width="20" height="20" viewBox="0 0 24 极狐" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 极狐 1 0 3 16.29"/></svg>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
                             Instalar App
                         </button>
                         <div class="relative ml-2" id="add-library-dropdown-container">
                             <button id="add-library-btn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors flex items-center">
-                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5极狐14"/></svg>
+                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                                 Adicionar Biblioteca
                             </button>
                             <div id="add-library-dropdown" class="origin-top-right absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-30">
@@ -139,32 +81,7 @@
 
             <div class="p-4 md:p-8">
                 <h2 id="library-title" class="text-3xl font-bold text-gray-900 mb-6">Sua Biblioteca</h2>
-                
-                <div id="json-upload-container">
-                    <div class="text-center w-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mx-auto mb-3"><path d="M14.5 2H6a2 2 0 0 极狐-2 2v16a2 2 0 0 0 2 2h12a极狐 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        <h3 class="text-xl font-semibold text-blue-800 mb-2">Adicionar Jogos</h3>
-                        <p class="text-blue-600 mb-4">Carregue seus jogos a partir de um arquivo JSON ou URL online</p>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
-                            <div class="relative">
-                                <input type="file" id="json-file-input" accept=".json" class="hidden">
-                                <label for="json-file-input" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                                    Carregar Arquivo JSON
-                                </label>
-                            </div>
-                            <span class="text-gray-500 text-sm">ou</span>
-                            <button id="download-template" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-                                Baixar Modelo
-                            </button>
-                        </div>
-                        <div id="load-status" class="mt-4 text-sm"></div>
-                    </div>
-                </div>
-                
-                <div id="game-library" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-6"></div>
+                <div id="game-library" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"></div>
                 <div id="message-center" class="text-center py-16"></div>
             </div>
         </main>
@@ -185,16 +102,13 @@
         </div>
     </div>
 
-    <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p极狐 z-50 hidden">
+    <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
-            <h3 class="text-xl font-semibold mb-4">Gerenciar Arquivos Carregados</h3>
-            <p class="text-sm text-gray-600 mb-4">Arquivos JSON carregados na sua biblioteca.</p>
-            <div id="local-sources-list" class="mb-4 max-h-60 overflow-y-auto border rounded-md p-2">
-                <p class="text-gray-500 text-center py-4">Nenhum arquivo carregado.</p>
-            </div>
-            <div class="flex justify-end mt-6">
-                <button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button>
-            </div>
+            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Locais</h3>
+            <p class="text-sm text-gray-600 mb-4">Adicione arquivos .json do seu computador. A aplicação pedirá permissão para acessá-los a cada sessão.</p>
+            <div id="local-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
+            <button id="add-local-source-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Adicionar Arquivo</button>
+            <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
         </div>
     </div>
     
@@ -206,41 +120,7 @@
         let games = [];
         let currentFilter = 'all';
         let searchQuery = '';
-        const DB_NAME = 'GameVaultDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'uploadedFiles';
         const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
-        
-        // Modelo de arquivo JSON
-        const jsonTemplate = [
-            {
-                "id": 1,
-                "nome do jogo": "Hollow Knight",
-                "descrição": "Explore um vasto reino em ruínas de insetos e heróis.",
-                "capa": "https://placehold.co/300x400/082f49/ffffff?text=Hollow+Knight",
-                "link do jogo local": "steam://rungameid/367520",
-                "favorito": true,
-                "categoria": "Metroidvania"
-            },
-            {
-                "id": 2,
-                "nome do jogo": "Stardew Valley",
-                "descrição": "Construa a fazenda dos seus sonhos em um charmoso vale.",
-                "capa": "https://placehold.co/300x400/166534/ffffff?text=Stardew+Valley",
-                "link do jogo local": "steam://rungameid/413150",
-                "favorito": true,
-                "categoria": "Simulação"
-            },
-            {
-                "id": 3,
-                "nome do jogo": "Cyberpunk 2077",
-                "descrição": "Uma história de ação e aventura em um mundo aberto na megalópole de Night City.",
-                "capa": "https://placehold.co/300x400/1a1a1a/ffffff?text=Cyberpunk+2077",
-                "link do jogo local": "steam://rungameid/1091500",
-                "favorito": false,
-                "categoria": "RPG"
-            }
-        ];
         
         // --- DOM ELEMENTS (fetched once) ---
         const dom = {
@@ -267,79 +147,63 @@
                 installPwa: document.getElementById('install-pwa-btn'),
                 manageOnline: document.getElementById('manage-online-sources-btn'),
                 manageLocal: document.getElementById('manage-local-sources-btn'),
-                downloadTemplate: document.getElementById('download-template'),
+                addLocalSource: document.getElementById('add-local-source-btn'),
             },
             forms: {
                 addOnlineSource: document.getElementById('add-online-source-form'),
             },
+            lists: {
+                onlineSources: document.getElementById('online-sources-list'),
+                localSources: document.getElementById('local-sources-list'),
+            },
             inputs: {
                 sourceUrl: document.getElementById('source-url-input'),
-                jsonFile: document.getElementById('json-file-input'),
+            }
+        };
+
+        // --- PWA LOGIC ---
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            dom.buttons.installPwa.classList.remove('hidden');
+        });
+        dom.buttons.installPwa.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                dom.buttons.installPwa.classList.add('hidden');
+            }
+        });
+
+        // --- IndexedDB HELPER FOR FILE HANDLES ---
+        const idbHelper = {
+            db: null,
+            async initDB() {
+                if (this.db) return this.db;
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open('GameVaultDB', 1);
+                    request.onerror = () => reject("Error opening IndexedDB.");
+                    request.onsuccess = (event) => { this.db = event.target.result; resolve(this.db); };
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('fileHandles')) {
+                            db.createObjectStore('fileHandles', { keyPath: 'name' });
+                        }
+                    };
+                });
             },
-            uploadContainer: document.getElementById('json-upload-container'),
-            loadStatus: document.getElementById('load-status'),
-            localSourcesList: document.getElementById('local-sources-list'),
-            onlineSourcesList: document.getElementById('online-sources-list')
+            async getStore(mode) { const db = await this.initDB(); return db.transaction('fileHandles', mode).objectStore('fileHandles'); },
+            async set(value) { return (await this.getStore('readwrite')).put(value); },
+            async delete(key) { return (await this.getStore('readwrite')).delete(key); },
+            async getAll() { return (await this.getStore('readonly')).getAll(); }
         };
 
-        // --- INDEXEDDB FUNCTIONS ---
-        const openDB = () => {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve(request.result);
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-            });
-        };
-        
-        const saveFileToDB = async (fileData) => {
-            const db = await openDB();
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const store = transaction.objectStore(STORE_NAME);
-            
-            return new Promise((resolve, reject) => {
-                const request = store.add(fileData);
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve(request.result);
-            });
-        };
-        
-        const getAllFilesFromDB = async () => {
-            const db = await openDB();
-            const transaction = db.transaction([STORE_NAME], 'readonly');
-            const store极狐 transaction.objectStore(STORE_NAME);
-            
-            return new Promise((resolve, reject) => {
-                const request = store.getAll();
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve(request.result);
-            });
-        };
-        
-        const deleteFileFromDB = async (id) => {
-            const db = await openDB();
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const store = transaction.objectStore(STORE_NAME);
-            
-            return new Promise((resolve, reject) => {
-                const request = store.delete(id);
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve(request.result);
-            });
-        };
-
-        // --- ONLINE SOURCES FUNCTIONS ---
+        // --- CORE FUNCTIONS ---
         const getOnlineSources = () => JSON.parse(localStorage.getItem(ONLINE_SOURCES_KEY)) || [];
         const saveOnlineSources = (sources) => localStorage.setItem(ONLINE_SOURCES_KEY, JSON.stringify(sources));
 
-        // --- CORE FUNCTIONS ---
         const showMessage = (title, text) => {
             dom.messageCenter.innerHTML = `<h3 class="text-xl font-semibold text-gray-700">${title}</h3><p class="text-gray-500 mt-2">${text}</p>`;
             dom.gameLibrary.innerHTML = '';
@@ -352,60 +216,67 @@
             setTimeout(() => { dom.toast.classList.add('opacity-0', 'translate-y-2'); }, 3000);
         };
         
-        // Função para carregar JSON a partir de um arquivo
-        const loadJsonFromFile = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const jsonData = JSON.parse(e.target.result);
-                        resolve(jsonData);
-                    } catch (err) {
-                        reject(err);
+        async function verifyPermission(fileHandle) {
+            if ((await fileHandle.queryPermission({ mode: 'read' })) === 'granted') return true;
+            return (await fileHandle.requestPermission({ mode: 'read' })) === 'granted';
+        }
+
+        const loadAllSources = async () => {
+            const onlineSources = getOnlineSources();
+            const localHandles = await idbHelper.getAll();
+            
+            if (onlineSources.length === 0 && localHandles.length === 0) {
+                showMessage('Bem-vindo ao GameVault!', 'Adicione uma fonte de jogos online ou local para começar.');
+                return;
+            }
+            showMessage('A carregar jogos...', 'A procurar dados de todas as fontes.');
+
+            const onlinePromises = onlineSources.map(url => 
+                fetch(url).then(res => {
+                    if(!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.json();
+                }).catch(err => {
+                    console.error(`Failed to fetch ${url}:`, err);
+                    showToast(`Falha ao carregar URL: ${url.slice(0,30)}...`, true);
+                    return null;
+                })
+            );
+            
+            const localPromises = localHandles.map(async ({ handle }) => {
+                try {
+                    const hasPermission = await verifyPermission(handle);
+                    if (hasPermission) {
+                        const file = await handle.getFile();
+                        const text = await file.text();
+                        return JSON.parse(text);
                     }
-                };
-                reader.onerror = () => reject(reader.error);
-                reader.readAsText(file);
-            });
-        };
-
-        // Função para carregar JSON a partir de uma URL
-        const loadJsonFromUrl = async (url) => {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    showToast(`Permissão negada para ${handle.name}`, true);
+                    return null;
+                } catch(err) {
+                    console.error(`Failed to read file ${handle.name}:`, err);
+                    showToast(`Falha ao ler o ficheiro: ${handle.name}`, true);
+                    return null;
                 }
-                return await response.json();
-            } catch (error) {
-                console.error('Erro ao carregar JSON da URL:', error);
-                throw error;
-            }
-        };
+            });
 
-        // Processar dados JSON
-        const processJsonData = (jsonData, sourceName) => {
-            const newGames = jsonData.filter(game => game && game.id);
+            const results = await Promise.all([...onlinePromises, ...localPromises]);
+            const allGamesRaw = results.flat().filter(Boolean);
+
+            const uniqueGames = new Map();
+            allGamesRaw.forEach(game => {
+                if (game && game.id) {
+                    uniqueGames.set(game.id, game);
+                }
+            });
+            games = Array.from(uniqueGames.values());
             
-            if (newGames.length === 0) {
-                showToast(`${sourceName} não contém jogos válidos.`, true);
-                return false;
+            if (games.length === 0) {
+                 showMessage('Nenhum jogo encontrado', 'Não foi possível carregar jogos. Verifique as suas fontes e permissões.');
+            } else {
+                dom.messageCenter.innerHTML = '';
+                populateCategories();
+                renderGames();
             }
-            
-            // Adicionar os novos jogos à lista principal
-            games = [...games, ...newGames];
-            
-            // Atualizar a interface
-            populateCategories();
-            renderGames();
-            showToast(`Carregados ${newGames.length} jogos de ${sourceName}!`);
-            
-            // Esconder o container de upload se já temos jogos
-            if (games.length > 0) {
-                dom.uploadContainer.style.display = 'none';
-            }
-            
-            return true;
         };
 
         const renderGames = () => {
@@ -440,7 +311,7 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         </button>
                     </div>
-                    <div class="p-4 flex-grow flex极狐-col">
+                    <div class="p-4 flex-grow flex flex-col">
                         <h3 class="text-lg font-semibold truncate flex-grow">${game['nome do jogo']}</h3>
                         <p class="text-sm text-gray-500">${game.categoria || 'Sem categoria'}</p>
                         <div class="mt-4"><button class="play-btn bg-blue-600 text-white px-4 py-2 rounded-md text-sm w-full hover:bg-blue-700" data-link="${game['link do jogo local'] || ''}">Jogar</button></div>
@@ -456,7 +327,7 @@
             if (categories.length > 0) {
                 const list = categories.map(cat => `
                     <a href="#" data-filter="category" data-category="${cat}" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2极狐5a2 2 0 0 1 2-2h5极狐2 3h9a2 2 0 0 1 2 2Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/></svg>
                         ${cat}
                     </a>`).join('');
                 dom.categoriesContainer.innerHTML = `<h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categorias</h3>${list}`;
@@ -470,196 +341,67 @@
         dom.modals.closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
         dom.modals.backdrop.addEventListener('click', closeModal);
 
-        // Função para renderizar a lista de arquivos carregados
-        const renderUploadedFilesList = async () => {
-            try {
-                const files = await getAllFilesFromDB();
-                if (files.length === 0) {
-                    dom.localSourcesList.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum arquivo carregado.</p>';
-                    return;
-                }
-                
-                dom.localSourcesList.innerHTML = files.map(file => `
-                    <div class="uploaded-file-item">
-                        <div class="truncate flex-1">${file.name}</div>
-                        <button class="delete-file-btn text-red-500 hover:text-red-700 font-bold text-xl" data-id="${file.id}">&times;</button>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Erro ao carregar lista de arquivos:', error);
-                dom.localSourcesList.innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar arquivos.</p>';
-            }
-        };
-
-        // Função para renderizar a lista de fontes online
+        dom.buttons.manageOnline.addEventListener('click', (e) => { e.preventDefault(); renderOnlineSourcesList(); openModal(dom.modals.online); dom.dropdown.menu.classList.add('hidden'); });
+        dom.buttons.manageLocal.addEventListener('click', (e) => { e.preventDefault(); renderLocalSourcesList(); openModal(dom.modals.local); dom.dropdown.menu.classList.add('hidden'); });
+        
+        // --- ONLINE SOURCES LOGIC ---
         const renderOnlineSourcesList = () => {
             const sources = getOnlineSources();
-            if (sources.length === 0) {
-                dom.onlineSourcesList.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhuma fonte online adicionada.</p>';
-                return;
-            }
-            
-            dom.onlineSourcesList.innerHTML = sources.map(source => `
-                <div class="source-item">
-                    <div class="truncate flex-1">${source}</div>
-                    <button class="remove-online-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-url="${source}">&times;</button>
-                </div>
-            `).join('');
+            dom.lists.onlineSources.innerHTML = sources.length === 0 
+                ? `<p class="text-gray-500">Nenhuma fonte online adicionada.</p>`
+                : sources.map(source => `
+                    <div class="flex items-center justify-between p-2 border-b">
+                        <span class="text-gray-700 truncate">${source}</span>
+                        <button class="remove-online-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-url="${source}">&times;</button>
+                    </div>`).join('');
         };
-
-        // Evento para abrir o modal de gerenciamento de arquivos
-        dom.buttons.manageLocal.addEventListener('click', (e) => { 
-            e.preventDefault(); 
-            renderUploadedFilesList(); 
-            openModal(dom.modals.local); 
-            dom.dropdown.menu.classList.add('hidden'); 
-        });
-
-        // Evento para abrir o modal de gerenciamento de fontes online
-        dom.buttons.manageOnline.addEventListener('click', (e) => { 
-            e.preventDefault(); 
-            renderOnlineSourcesList(); 
-            openModal(dom.modals.online); 
-            dom.dropdown.menu.classList.add('hidden'); 
-        });
-
-        // Evento para deletar arquivos
-        dom.localSourcesList.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('delete-file-btn')) {
-                const fileId = Number(e.target.dataset.id);
-                try {
-                    await deleteFileFromDB(fileId);
-                    showToast('Arquivo removido com sucesso!');
-                    
-                    // Recarregar a lista de arquivos
-                    await renderUploadedFilesList();
-                    
-                    // Recarregar todos os jogos (precisamos recriar a lista de jogos)
-                    await loadAllGames();
-                } catch (error) {
-                    console.error('Erro ao deletar arquivo:', error);
-                    showToast('Erro ao remover arquivo.', true);
-                }
-            }
-        });
-
-        // Evento para deletar fontes online
-        dom.onlineSourcesList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-online-source-btn')) {
-                const urlToRemove = e.target.dataset.url;
-                const sources = getOnlineSources();
-                saveOnlineSources(sources.filter(url => url !== urlToRemove));
-                renderOnlineSourcesList();
-                loadAllGames();
-                showToast('Fonte online removida com sucesso!');
-            }
-        });
-
-        // Evento para adicionar fonte online
-        dom.forms.addOnlineSource.addEventListener('submit', async (e) => {
+        dom.forms.addOnlineSource.addEventListener('submit', (e) => {
             e.preventDefault();
             const newUrl = dom.inputs.sourceUrl.value.trim();
             if (newUrl) {
                 const sources = getOnlineSources();
                 if (!sources.includes(newUrl)) {
                     saveOnlineSources([...sources, newUrl]);
-                    dom.inputs.sourceUrl.value = '';
                     renderOnlineSourcesList();
-                    
-                    // Tentar carregar a nova fonte
-                    try {
-                        const jsonData = await loadJsonFromUrl(newUrl);
-                        processJsonData(jsonData, newUrl);
-                    } catch (error) {
-                        showToast('Erro ao carregar fonte online. Verifique a URL.', true);
-                    }
-                } else {
-                    showToast('Essa fonte já foi adicionada.', true);
-                }
+                    dom.inputs.sourceUrl.value = '';
+                    loadAllSources();
+                } else { showToast('Essa fonte já foi adicionada.', true); }
             }
         });
-
-        // Função para carregar todos os jogos (locais e online)
-        const loadAllGames = async () => {
-            try {
-                // Limpar jogos atuais
-                games = [];
-                
-                // Carregar arquivos locais
-                const files = await getAllFilesFromDB();
-                for (const file of files) {
-                    if (file.data && Array.isArray(file.data)) {
-                        games = [...games, ...file.data];
-                    }
-                }
-                
-                // Carregar fontes online
-                const onlineSources = getOnlineSources();
-                for (const source of onlineSources) {
-                    try {
-                        const jsonData = await loadJsonFromUrl(source);
-                        if (jsonData && Array.isArray(jsonData)) {
-                            games = [...games, ...jsonData];
-                        }
-                    } catch (error) {
-                        console.error(`Erro ao carregar fonte online ${source}:`, error);
-                    }
-                }
-                
-                if (games.length === 0) {
-                    showMessage('Nenhum jogo encontrado', 'Adicione alguns jogos através do upload de arquivos JSON ou URLs online.');
-                    dom.uploadContainer.style.display = 'flex';
-                } else {
-                    dom.uploadContainer.style.display = 'none';
-                    populateCategories();
-                    renderGames();
-                }
-            } catch (error) {
-                console.error('Erro ao carregar jogos:', error);
-                showToast('Erro ao carregar jogos.', true);
+        dom.lists.onlineSources.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-online-source-btn')) {
+                const urlToRemove = e.target.dataset.url;
+                saveOnlineSources(getOnlineSources().filter(url => url !== urlToRemove));
+                renderOnlineSourcesList();
+                loadAllSources();
             }
+        });
+        
+        // --- LOCAL SOURCES LOGIC ---
+        const renderLocalSourcesList = async () => {
+            const handles = await idbHelper.getAll();
+            dom.lists.localSources.innerHTML = handles.length === 0 
+                ? `<p class="text-gray-500">Nenhum ficheiro local adicionado.</p>`
+                : handles.map(({ name }) => `
+                    <div class="flex items-center justify-between p-2 border-b">
+                        <span class="text-gray-700 truncate">${name}</span>
+                        <button class="remove-local-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-name="${name}">&times;</button>
+                    </div>`).join('');
         };
-
-        // Adicionar evento para carregar JSON manualmente
-        dom.inputs.jsonFile.addEventListener('change', async () => {
-            if (!dom.inputs.jsonFile.files.length) return;
-
-            dom.loadStatus.innerHTML = '<div class="loading-spinner"></div><p class="mt-2">Carregando arquivo...</p>';
-            
+        dom.buttons.addLocalSource.addEventListener('click', async () => {
             try {
-                const file = dom.inputs.jsonFile.files[0];
-                const jsonData = await loadJsonFromFile(file);
-                
-                // Salvar o arquivo no IndexedDB
-                await saveFile极狐DB({
-                    name: file.name,
-                    data: jsonData,
-                    uploadedAt: new Date().toISOString()
-                });
-                
-                // Processar os dados
-                if (processJsonData(jsonData, file.name)) {
-                    dom.loadStatus.innerHTML = '<p class="text-green-600">Arquivo carregado com sucesso!</p>';
-                } else {
-                    dom.loadStatus.innerHTML = '<p class="text-red-600">Arquivo não contém jogos válidos.</p>';
-                }
-            } catch (err) {
-                console.error('Erro ao carregar JSON:', err);
-                dom.loadStatus.innerHTML = `<p class="text-red-600">Erro ao processar o arquivo JSON. Verifique o formato.</p>`;
-                showToast('Erro ao processar o arquivo JSON. Verifique o formato.', true);
-            }
+                const [fileHandle] = await window.showOpenFilePicker({ types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }] });
+                await idbHelper.set({ name: fileHandle.name, handle: fileHandle });
+                await renderLocalSourcesList();
+                await loadAllSources();
+            } catch (err) { if(err.name !== 'AbortError') { console.error('Error picking file:', err); showToast('Não foi possível adicionar o ficheiro.', true); } }
         });
-
-        // Evento para baixar o modelo JSON
-        dom.buttons.downloadTemplate.addEventListener('click', () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonTemplate, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "modelo-jogos.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            showToast("Modelo baixado com sucesso!");
+        dom.lists.localSources.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('remove-local-source-btn')) {
+                await idbHelper.delete(e.target.dataset.name);
+                await renderLocalSourcesList();
+                await loadAllSources();
+            }
         });
 
         // --- GENERAL EVENT LISTENERS ---
@@ -707,8 +449,11 @@
             renderGames();
         });
 
-        // Inicialização - carregar jogos do IndexedDB e fontes online
-        loadAllGames();
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+        }
+        
+        loadAllSources(); // Carga inicial
     });
     </script>
 </body>
