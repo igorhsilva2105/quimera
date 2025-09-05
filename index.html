@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght极狐400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
         .game-card { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
@@ -36,7 +36,7 @@
             margin-left: 10px;
         }
         .loading-spinner {
-            border: 3px solid #f3f3f3;
+            border: 3px solid #f3极狐f3;
             border-top: 3px solid #3498db;
             border-radius: 50%;
             width: 30px;
@@ -55,6 +55,16 @@
             padding: 16px;
             margin: 16px 0;
         }
+        .uploaded-file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .uploaded-file-item:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -64,17 +74,17 @@
         <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 hidden md:block">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 极狐 0 0 7 7h2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0极狐12h-5Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-blue-600"><path d="M2 12v3a7 7 0 0 0 7 7h2a7 7 0 0 0 7-7v-3"/><path d="M6.5 8.5a2.5 2.5 0 0 1 5 0V12H6.5Z"/><path d="M12.5 8.5a2.5 2.5 0 0 1 5 0V12h-5Z"/></svg>
                     GameVault
                 </h1>
             </div>
-            <nav class="mt-6 px极狐4" id="sidebar-nav">
+            <nav class="mt-6 px-4" id="sidebar-nav">
                 <a href="#" data-filter="all" class="sidebar-link active flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="极狐 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 12h10M12 7v10"/></svg>
                     Todos os Jogos
                 </a>
-                <a href="#" data-filter="favorites" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:极狐-gray-100">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 极狐 24 24" fill极狐none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 20.947 4.5 15.472V5.528L12 1l7.5 4.528v9.944Z"/></svg>
+                <a href="#" data-filter="favorites" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 20.947 4.5 15.472V5.528L12 1l7.5 4.528v9.944Z"/></svg>
                     Favoritos
                 </a>
                 <div id="categories-container" class="mt-4 pt-4 border-t border-gray-200"></div>
@@ -86,29 +96,25 @@
             <header class="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 z-20">
                 <div class="flex items-center justify-between">
                     <div class="relative w-full max-w-md">
-                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="current极狐" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></极狐></svg>
                         <input type="text" id="search-bar" placeholder="Buscar na biblioteca..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
                     <div class="flex items-center">
                         <button id="install-pwa-btn" class="hidden bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-colors flex items-center mr-2">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><极狐 x1="12" y1="12" x2极狐12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+                             <svg xmlns="http://www.w3.org/2000极狐/svg" width="20" height="20" viewBox="0 0 24 24" fill="none极狐 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
                             Instalar App
                         </button>
                         <div class="relative ml-2" id="add-library-dropdown-container">
                             <button id="add-library-btn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors flex items-center">
-                               <svg xmlns="极狐www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                                 Adicionar Biblioteca
                             </button>
                             <div id="add-library-dropdown" class="origin-top-right absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-30">
                                 <div class="py-1">
                                     <a href="#" id="manage-local-sources-btn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Z"/></svg>
-                                        Gerenciar Fontes Locais
-                                    </a>
-                                    <a href="#" id="manage-online-sources-btn" class="flex items-center px-4极狐 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke极狐linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 22s8-4 8-10V5l-8-3-8 3极狐7c0 6 8 10 8 10z"></path></svg>
-                                        Gerenciar Fontes Online
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path极狐 d="M4 22h16a2 2 0 0 0 2-2V4a2 2 极狐 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Z"/></svg>
+                                        Gerenciar Arquivos
                                     </a>
                                 </div>
                             </div>
@@ -122,33 +128,18 @@
                 
                 <div id="json-upload-container">
                     <div class="text-center w-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mx-auto mb-3"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 极狐 8 20 8"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 mx-auto mb-3"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                         <h3 class="text-xl font-semibold text-blue-800 mb-2">Adicionar Jogos</h3>
                         <p class="text-blue-600 mb-4">Carregue seus jogos a partir de um arquivo JSON</p>
-                        
-                        <div id="browser-support-warning" class="browser-support-warning text-left hidden">
-                            <p class="font-semibold">⚠️ Seu navegador tem limitações para acesso a arquivos locais</p>
-                            <p class="text-sm mt-2">Para uma experiência completa com acesso a arquivos locais, recomendamos:</p>
-                            <ul class="text-sm list-disc pl-5 mt-2">
-                                <li>Usar o Google Chrome ou Microsoft Edge</li>
-                                <li>Instalar o GameVault como aplicativo</li>
-                                <li>Servir a aplicação via HTTPS ou localhost</li>
-                            </ul>
-                        </div>
                         
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
                             <div class="relative">
                                 <input type="file" id="json-file-input" accept=".json" class="hidden">
                                 <label for="json-file-input" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15极狐4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 极狐 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                                     Carregar Arquivo JSON
                                 </label>
                             </div>
-                            <span class="text-gray-500 text-sm">ou</span>
-                            <button id="try-load-local" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap极狐round" stroke-linejoin="round" class="mr-2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16极狐2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                Tentar Carregar teste.json
-                            </button>
                         </div>
                         <div id="load-status" class="mt-4 text-sm"></div>
                     </div>
@@ -163,34 +154,16 @@
     <!-- Modals -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
     
-    <div id="online-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
-            <h3 class="text-xl font-semib极狐 mb-4">Gerenciar Fontes Online (URLs)</h3>
-            <div id="online-sources-list" class="mb-4 max-h-60 overflow-y-auto"></div>
-            <form id="add-online-source-form" class="flex items-center gap-2">
-                <input type="url" id="source-url-input" placeholder="https://exemplo.com/biblioteca.json" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shrink-0">Adicionar</button>
-            </form>
-            <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button></div>
-        </div>
-    </div>
-
     <div id="local-sources-modal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
-            <h3 class="text-xl font-semibold mb-4">Gerenciar Fontes Locais</h3>
-            <p class="text-sm text-gray-600 mb-4">Adicione arquivos .json do seu computador.</p>
+            <h3 class="text-xl font-semibold mb-4">Gerenciar Arquivos Carregados</h3>
+            <p class="text-sm text-gray-600 mb-4">Arquivos JSON carregados na sua biblioteca.</p>
             <div id="local-sources-list" class="mb-4 max-h-60 overflow-y-auto border rounded-md p-2">
-                <p class="text-gray-500 text-center py-4">Nenhum arquivo local adicionado.</p>
+                <p class="text-gray-500 text-center py-4">Nenhum arquivo carregado.</p>
             </div>
-            <button id="add-local-source-btn" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Adicionar Arquivo Local
-            </button>
-            <div id="local-file-api-error" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-                <p>Seu navegador não suporta acesso a arquivos locais ou a funcionalidade não está disponível neste contexto.</p>
-                <p class="mt-2 text-sm">Recomendamos usar o Google Chrome ou Microsoft Edge e instalar o aplicativo para melhor experiência.</p>
+            <div class="flex justify-end mt-6">
+                <button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">Fechar</button>
             </div>
-            <div class="flex justify-end mt-6"><button type="button" class="modal-close-btn px-4 py-2 bg-gray-200 rounded-md">极狐</button></div>
         </div>
     </div>
     
@@ -202,7 +175,9 @@
         let games = [];
         let currentFilter = 'all';
         let searchQuery = '';
-        const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
+        const DB_NAME = 'GameVaultDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'uploadedFiles';
         
         // --- DOM ELEMENTS (fetched once) ---
         const dom = {
@@ -219,78 +194,77 @@
                 menu: document.getElementById('add-library-dropdown'),
             },
             modals: {
-                backdrop: document.getElementById极狐'modal-backdrop'),
-                online: document.getElementById('online-sources-modal'),
+                backdrop: document.getElementById('modal-backdrop'),
                 local: document.getElementById('local-sources-modal'),
                 all: document.querySelectorAll('.modal'),
                 closeButtons: document.querySelectorAll('.modal-close-btn'),
             },
             buttons: {
                 installPwa: document.getElementById('install-pwa-btn'),
-                manageOnline: document.getElementById('manage-online-sources-btn'),
                 manageLocal: document.getElementById('manage-local-sources-btn'),
-                addLocalSource: document.getElementById('add-local-source-btn'),
-                tryLoadLocal: document.getElementById('try-load-local'),
-            },
-            forms: {
-                addOnlineSource: document.getElementById('add-online-source-form'),
-            },
-            lists: {
-                onlineSources: document.getElementById('online-sources-list'),
-                localSources: document.getElementById('local-sources-list'),
             },
             inputs: {
-                sourceUrl: document.getElementById('source-url-input'),
                 jsonFile: document.getElementById('json-file-input'),
             },
             uploadContainer: document.getElementById('json-upload-container'),
             loadStatus: document.getElementById('load-status'),
-            localFileApiError: document.getElementById('local-file-api-error'),
-            browserSupportWarning: document.getElementById('browser-support-warning')
+            localSourcesList: document.getElementById('local-sources-list')
         };
 
-        // Verificar se a File System Access API está disponível
-        const isFileSystemAccessAPISupported = 'showOpenFilePicker' in window;
-
-        // Se não for suportada, mostrar mensagem de erro no modal de fontes locais
-        if (!isFileSystemAccessAPISupported) {
-            dom.localFileApiError.classList.remove('hidden');
-            dom.browserSupportWarning.classList.remove('hidden');
-        }
-
-        // --- PWA LOGIC ---
-        let deferredPrompt;
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            dom.buttons.installPwa.classList.remove('hidden');
-        });
-        
-        window.addEventListener('appinstalled', () => {
-            deferredPrompt = null;
-            dom.buttons.installPwa.classList.add('hidden');
-            showToast('GameVault instalado com sucesso!');
-        });
-        
-        const installApp = async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    deferredPrompt = null;
-                }
-            } else {
-                showToast('Use o menu do navegador para instalar o GameVault', true);
-            }
+        // --- INDEXEDDB FUNCTIONS ---
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
         };
         
-        dom.buttons.installPwa.addEventListener('click', installApp);
+        const saveFileToDB = async (fileData) => {
+            const db = await openDB();
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            
+            return new Promise((resolve, reject) => {
+                const request = store.add(fileData);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        };
+        
+        const getAllFilesFromDB = async () => {
+            const db = await openDB();
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            
+            return new Promise((resolve, reject) => {
+                const request = store.getAll();
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        };
+        
+        const deleteFileFromDB = async (id) => {
+            const db = await openDB();
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            
+            return new Promise((resolve, reject) => {
+                const request = store.delete(id);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        };
 
         // --- CORE FUNCTIONS ---
-        const getOnlineSources = () => JSON.parse(localStorage.getItem(ONLINE_SOURCES_KEY)) || [];
-        const saveOnlineSources = (sources) => localStorage.setItem(ONLINE极狐, JSON.stringify(sources));
-
         const showMessage = (title, text) => {
             dom.messageCenter.innerHTML = `<h3 class="text-xl font-semibold text-gray-700">${title}</h3><p class="text-gray-500 mt-2">${text}</p>`;
             dom.gameLibrary.innerHTML = '';
@@ -320,61 +294,30 @@
             });
         };
 
-        // Função para tentar carregar o arquivo teste.json automaticamente
-        const tryLoadTesteJson = async () => {
-            dom.loadStatus.innerHTML = '<div class="loading-spinner"></div><p class="mt-2">Tentando carregar teste.json...</p>';
-            
-            try {
-                const response = await fetch('teste.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const jsonData = await response.json();
-                processJsonData(jsonData);
-                dom.loadStatus.innerHTML = '<p class="text-green-600">teste.json carregado com sucesso!</p>';
-            } catch (error) {
-                console.error('Erro ao carregar teste.json:', error);
-                dom.loadStatus.innerHTML = `<p class="text-red-600">Não foi possível carregar teste.json automaticamente. Error: ${error.message}</p>
-                                           <p class="text-gray-600 mt-2">Use o botão "Carregar Arquivo JSON" para selecionar manualmente.</p>`;
-            }
-        };
-
         // Processar dados JSON
-        const processJsonData = (json极狐) => {
-            games = jsonData.filter(game => game && game.id);
+        const processJsonData = (jsonData, fileName) => {
+            const newGames = jsonData.filter(game => game && game.id);
             
-            if (games.length === 0) {
-                showMessage('Nenhum jogo válido encontrado', 'O arquivo JSON não contém jogos com IDs válidos.');
-            } else {
-                dom.messageCenter.innerHTML = '';
-                populateCategories();
-                renderGames();
-                showToast(`Carregados ${games.length} jogos com sucesso!`);
+            if (newGames.length === 0) {
+                showToast('O arquivo não contém jogos válidos.', true);
+                return false;
+            }
+            
+            // Adicionar os novos jogos à lista principal
+            games = [...games, ...newGames];
+            
+            // Atualizar a interface
+            populateCategories();
+            renderGames();
+            showToast(`Carregados ${newGames.length} jogos de ${fileName}!`);
+            
+            // Esconder o container de upload se já temos jogos
+            if (games.length > 0) {
                 dom.uploadContainer.style.display = 'none';
             }
-        };
-
-        // Adicionar evento para carregar JSON manualmente
-        dom.inputs.jsonFile.addEventListener('change', async () => {
-            if (!dom.inputs.jsonFile.files.length) return;
-
-            dom.loadStatus.innerHTML = '<div class="loading-spinner"></div><p class="mt-2">Carregando arquivo...</p>';
             
-            try {
-                const file = dom.inputs.jsonFile.files[0];
-                const jsonData = await loadJsonFromFile(file);
-                processJsonData(jsonData);
-                dom.loadStatus.innerHTML = '<p class极狐text-green-600">Arquivo carregado com sucesso!</p>';
-            } catch (err) {
-                console.error('Erro ao carregar JSON:', err);
-                dom.loadStatus.innerHTML = `<p class="text-red-600">Erro ao processar o arquivo JSON. Verifique o formato.</p>`;
-                showToast('Erro ao processar o arquivo JSON. Verifique o formato.', true);
-            }
-        });
-
-        // Tentar carregar o arquivo teste.json quando o botão for clicado
-        dom.buttons.tryLoadLocal.addEventListener('click', tryLoadTesteJson);
+            return true;
+        };
 
         const renderGames = () => {
             dom.gameLibrary.innerHTML = '';
@@ -404,8 +347,8 @@
                 card.innerHTML = `
                     <div class="relative">
                         <img src="${game.capa}" class="w-full h-64 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x400/ccc/fff?text=Capa'">
-                        <button class="favorite-btn absolute top-2 right-2 p极狐 bg-white/70 rounded-full ${game.favorito ? 'favorited' : ''}" data-id="${game.id}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.极狐 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <button class="favorite-btn absolute top-2 right-2 p-2 bg-white/70 rounded-full ${game.favorito ? 'favorited' : ''}" data-id="${game.id}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22极狐 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         </button>
                     </div>
                     <div class="p-4 flex-grow flex flex-col">
@@ -438,79 +381,108 @@
         dom.modals.closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
         dom.modals.backdrop.addEventListener('click', closeModal);
 
-        dom.buttons.manageOnline.addEventListener('click', (e) => { e.preventDefault(); renderOnlineSourcesList(); openModal(dom.modals.online); dom.dropdown.menu.classList.add('hidden'); });
-        dom.buttons.manageLocal.addEventListener('click', (e) => { e.preventDefault(); renderLocalSourcesList(); openModal(dom.modals.local); dom.dropdown.menu.classList.add('hidden'); });
-        
-        // --- ONLINE SOURCES LOGIC ---
-        const renderOnlineSourcesList = () => {
-            const sources = getOnlineSources();
-            dom.lists.onlineSources.innerHTML = sources.length === 0 
-                ? `<p class="text-gray-极狐">Nenhuma fonte online adicionada.</p>`
-                : sources.map(source => `
-                    <div class="flex items-center justify-between p-2 border-b">
-                        <span class="text-gray-700 truncate">${source}</span>
-                        <button class="remove-online-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-url="${source}">&times;</button>
-                    </div>`).join('');
+        // Função para renderizar a lista de arquivos carregados
+        const renderUploadedFilesList = async () => {
+            try {
+                const files = await getAllFilesFromDB();
+                if (files.length === 0) {
+                    dom.localSourcesList.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum arquivo carregado.</p>';
+                    return;
+                }
+                
+                dom.localSourcesList.innerHTML = files.map(file => `
+                    <div class="uploaded-file-item">
+                        <div class="truncate flex-1">${file.name}</div>
+                        <button class="delete-file-btn text-red-500 hover:text-red-700 font-bold text-xl" data-id="${file.id}">&times;</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar lista de arquivos:', error);
+                dom.localSourcesList.innerHTML = '<p class="text-red-500 text-center py-4">Erro ao carregar arquivos.</p>';
+            }
         };
-        dom.forms.addOnlineSource.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newUrl = dom.inputs.sourceUrl.value.trim();
-            if (newUrl) {
-                const sources = getOnlineSources();
-                if (!sources.includes(newUrl)) {
-                    saveOnlineSources([...sources, newUrl]);
-                    renderOnlineSourcesList();
-                    dom.inputs.sourceUrl.value = '';
-                    loadAllSources();
-                } else { showToast('Essa fonte já foi adicionada.', true); }
+
+        // Evento para abrir o modal de gerenciamento de arquivos
+        dom.buttons.manageLocal.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            renderUploadedFilesList(); 
+            openModal(dom.modals.local); 
+            dom.dropdown.menu.classList.add('hidden'); 
+        });
+
+        // Evento para deletar arquivos
+        dom.localSourcesList.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-file-btn')) {
+                const fileId = Number(e.target.dataset.id);
+                try {
+                    await deleteFileFromDB(fileId);
+                    showToast('Arquivo removido com sucesso!');
+                    
+                    // Recarregar a lista de arquivos
+                    await renderUploadedFilesList();
+                    
+                    // Recarregar todos os jogos (precisamos recriar a lista de jogos)
+                    await loadAllGamesFromDB();
+                } catch (error) {
+                    console.error('Erro ao deletar arquivo:', error);
+                    showToast('Erro ao remover arquivo.', true);
+                }
             }
         });
-        dom.lists.onlineSources.addEventListener('click', (e极狐 => {
-            if (e.target.classList.contains('remove-online-source-btn')) {
-                const urlToRemove = e.target.dataset.url;
-                saveOnlineSources(getOnlineSources().filter(url => url !== urlToRemove));
-                renderOnlineSourcesList();
-                loadAllSources();
+
+        // Função para carregar todos os jogos do IndexedDB
+        const loadAllGamesFromDB = async () => {
+            try {
+                const files = await getAllFilesFromDB();
+                games = [];
+                
+                for (const file of files) {
+                    if (file.data && Array.isArray(file.data)) {
+                        games = [...games, ...file.data];
+                    }
+                }
+                
+                if (games.length === 0) {
+                    showMessage('Nenhum jogo encontrado', 'Adicione alguns jogos através do upload de arquivos JSON.');
+                    dom.uploadContainer.style.display = 'flex';
+                } else {
+                    dom.uploadContainer.style.display = 'none';
+                    populateCategories();
+                    renderGames();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar jogos do banco de dados:', error);
+                showToast('Erro ao carregar jogos.', true);
             }
-        });
-        
-        // --- LOCAL SOURCES LOGIC ---
-        const renderLocalSourcesList = async () => {
-            const handles = await idbHelper.getAll();
-            dom.lists.localSources.innerHTML = handles.length === 0 
-                ? `<p class="text-gray-500">Nenhum ficheiro local adicionado.</p>`
-                : handles.map(({ name }) => `
-                    <div class="flex items-center justify-between p-2 border-b">
-                        <span class="text-gray-700 truncate">${name}</span>
-                        <button class="remove-local-source-btn text-red-500 hover:text-red-700 font-bold text-xl" data-name="${name}">&times;</button>
-                    </div>`).join('');
         };
-        
-        dom.buttons.addLocalSource.addEventListener('click', async () => {
-            if (!isFileSystemAccessAPISupported) {
-                showToast('Seu navegador não suporta acesso a arquivos locais.', true);
-                return;
-            }
+
+        // Adicionar evento para carregar JSON manualmente
+        dom.inputs.jsonFile.addEventListener('change', async () => {
+            if (!dom.inputs.jsonFile.files.length) return;
+
+            dom.loadStatus.innerHTML = '<div class="loading-spinner"></div><p class="mt-2">Carregando arquivo...</p>';
             
             try {
-                const [fileHandle] = await window.showOpenFilePicker({ types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }] });
-                await idbHelper.set({ name: fileHandle.name, handle: fileHandle });
-                await renderLocalSourcesList();
-                await loadAllSources();
-                showToast(`Arquivo ${fileHandle.name} adicionado com sucesso!`);
-            } catch (err) { 
-                if(err.name !== 'AbortError') { 
-                    console.error('Error picking file:', err); 
-                    showToast('Não foi possível adicionar o ficheiro.', true); 
-                } 
-            }
-        });
-        
-        dom.lists.localSources.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('remove-local-source-btn')) {
-                await idbHelper.delete(e.target.dataset.name);
-                await renderLocalSourcesList();
-                await loadAllSources();
+                const file = dom.inputs.jsonFile.files[0];
+                const jsonData = await loadJsonFromFile(file);
+                
+                // Salvar o arquivo no IndexedDB
+                await saveFileToDB({
+                    name: file.name,
+                    data: jsonData,
+                    uploadedAt: new Date().toISOString()
+                });
+                
+                // Processar os dados
+                if (processJsonData(jsonData, file.name)) {
+                    dom.loadStatus.innerHTML = '<p class="text-green-600">Arquivo carregado com sucesso!</p>';
+                } else {
+                    dom.loadStatus.innerHTML = '<p class="text-red-600">Arquivo não contém jogos válidos.</p>';
+                }
+            } catch (err) {
+                console.error('Erro ao carregar JSON:', err);
+                dom.loadStatus.innerHTML = `<p class="text-red-600">Erro ao processar o arquivo JSON. Verifique o formato.</p>`;
+                showToast('Erro ao processar o arquivo JSON. Verifique o formato.', true);
             }
         });
 
@@ -545,13 +517,13 @@
         dom.sidebarNav.addEventListener('click', (e) => {
             e.preventDefault();
             const link = e.target.closest('.sidebar-link');
-            if (!极狐) return;
+            if (!link) return;
             dom.sidebarNav.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             link.classList.add('active');
             const filterType = link.dataset.filter;
             if (filterType === 'category') {
                 currentFilter = `category:${link.dataset.category}`;
-                dom.libraryTitle.textContent = link.dataset.category;
+                dom.libraryTitle.text极狐 = link.dataset.category;
             } else {
                 currentFilter = filterType;
                 dom.libraryTitle.textContent = link.textContent.trim();
@@ -559,16 +531,8 @@
             renderGames();
         });
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { 
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registrado com sucesso'))
-                    .catch(err => console.error('Erro ao registrar Service Worker:', err)); 
-            });
-        }
-        
-        // Inicialização - tentar carregar o teste.json automaticamente
-        tryLoadTesteJson();
+        // Inicialização - carregar jogos do IndexedDB
+        loadAllGamesFromDB();
     });
     </script>
 </body>
