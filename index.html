@@ -15,6 +15,45 @@
     .sidebar-link.active { background-color: #e9eef6; color: #1a73e8; font-weight: 600; }
     .favorite-btn.favorited svg { fill: #f44336; stroke: #f44336; }
     .toast { transition: opacity 0.3s, transform 0.3s; }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .switch input { 
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
   </style>
 </head>
 <body class="text-gray-800">
@@ -29,6 +68,17 @@
       <a href="#" data-filter="all" class="sidebar-link active flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100">Todos os Jogos</a>
       <a href="#" data-filter="favorites" class="sidebar-link flex items-center px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-gray-100">Favoritos</a>
       <div id="categories-container" class="mt-4 pt-4 border-t border-gray-200"></div>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Configurações</h3>
+        <div class="px-4 py-2 flex items-center justify-between">
+          <span class="text-sm text-gray-700">Sincronização Automática</span>
+          <label class="switch">
+            <input type="checkbox" id="periodic-sync-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div id="sync-status" class="px-4 py-1 text-xs text-gray-500">Desativada</div>
+      </div>
     </nav>
   </aside>
 
@@ -89,6 +139,8 @@ let currentFilter = 'all';
 let searchQuery = '';
 const ONLINE_SOURCES_KEY = 'gameVaultOnlineSources';
 const LOCAL_SOURCES_KEY = 'gameVaultLocalSources';
+const PERIODIC_SYNC_KEY = 'gameVaultPeriodicSync';
+const LAST_SYNC_KEY = 'gameVaultLastSync';
 
 // --- DOM ---
 const dom = {
@@ -125,6 +177,10 @@ const dom = {
   },
   inputs: {
     sourceUrl: document.getElementById('source-url-input'),
+  },
+  sync: {
+    toggle: document.getElementById('periodic-sync-toggle'),
+    status: document.getElementById('sync-status')
   }
 };
 
@@ -133,6 +189,10 @@ const getOnlineSources = () => JSON.parse(localStorage.getItem(ONLINE_SOURCES_KE
 const saveOnlineSources = (sources) => localStorage.setItem(ONLINE_SOURCES_KEY, JSON.stringify(sources));
 const getLocalSources = () => JSON.parse(localStorage.getItem(LOCAL_SOURCES_KEY)) || [];
 const saveLocalSources = (sources) => localStorage.setItem(LOCAL_SOURCES_KEY, JSON.stringify(sources));
+const getPeriodicSyncEnabled = () => localStorage.getItem(PERIODIC_SYNC_KEY) === 'true';
+const setPeriodicSyncEnabled = (enabled) => localStorage.setItem(PERIODIC_SYNC_KEY, enabled.toString());
+const getLastSyncTime = () => localStorage.getItem(LAST_SYNC_KEY) || 'Nunca';
+const setLastSyncTime = () => localStorage.setItem(LAST_SYNC_KEY, new Date().toLocaleString('pt-BR'));
 
 // --- UI HELPERS ---
 const showMessage = (title, text) => {
@@ -158,6 +218,80 @@ async function removeCachedFile(name) {
   const cache = await caches.open('gamevault-cache-v1');
   await cache.delete(`/local/${name}`);
 }
+
+// --- PERIODIC SYNC FUNCTIONS ---
+const updateSyncStatus = () => {
+  const isEnabled = getPeriodicSyncEnabled();
+  dom.sync.toggle.checked = isEnabled;
+  dom.sync.status.textContent = isEnabled ? 
+    `Ativada (Última sincronização: ${getLastSyncTime()})` : 
+    'Desativada';
+};
+
+const registerPeriodicSync = async () => {
+  if (!('periodicSync' in window.registration)) {
+    showToast('Sincronização periódica não suportada neste navegador', true);
+    setPeriodicSyncEnabled(false);
+    updateSyncStatus();
+    return;
+  }
+
+  try {
+    const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+    if (status.state !== 'granted') {
+      showToast('Permissão para sincronização periódica não concedida', true);
+      setPeriodicSyncEnabled(false);
+      updateSyncStatus();
+      return;
+    }
+
+    await window.registration.periodicSync.register('gamevault-sync', {
+      minInterval: 24 * 60 * 60 * 1000, // 1 dia
+    });
+    
+    setPeriodicSyncEnabled(true);
+    setLastSyncTime();
+    showToast('Sincronização periódica ativada!');
+    console.log('Periodic sync registered');
+  } catch (error) {
+    console.error('Periodic sync registration failed:', error);
+    showToast('Falha ao ativar sincronização periódica', true);
+    setPeriodicSyncEnabled(false);
+  }
+  updateSyncStatus();
+};
+
+const unregisterPeriodicSync = async () => {
+  try {
+    await window.registration.periodicSync.unregister('gamevault-sync');
+    setPeriodicSyncEnabled(false);
+    showToast('Sincronização periódica desativada');
+    console.log('Periodic sync unregistered');
+  } catch (error) {
+    console.error('Periodic sync unregistration failed:', error);
+  }
+  updateSyncStatus();
+};
+
+const performBackgroundSync = async () => {
+  console.log('Executando sincronização em background...');
+  try {
+    await loadAllSources();
+    setLastSyncTime();
+    updateSyncStatus();
+    
+    // Mostrar notificação se o app não estiver em primeiro plano
+    if (!document.hasFocus() && 'Notification' in window && Notification.permission === 'granted') {
+      new Notification('GameVault', {
+        body: 'Biblioteca de jogos atualizada com sucesso!',
+        icon: '/icon-192x192.png'
+      });
+    }
+  } catch (error) {
+    console.error('Erro na sincronização em background:', error);
+  }
+};
+
 // --- ONLINE SOURCES LOGIC ---
 const renderOnlineSourcesList = () => {
   const sources = getOnlineSources();
@@ -182,6 +316,11 @@ dom.forms.addOnlineSource.addEventListener('submit', (e) => {
       renderOnlineSourcesList();
       dom.inputs.sourceUrl.value = '';
       loadAllSources();
+      
+      // Se a sincronização periódica estiver ativa, sincronizar novamente
+      if (getPeriodicSyncEnabled()) {
+        performBackgroundSync();
+      }
     } else {
       showToast('Essa fonte já foi adicionada.', true);
     }
@@ -197,7 +336,8 @@ dom.lists.onlineSources.addEventListener('click', (e) => {
     loadAllSources();
   }
 });
-    // --- LOCAL SOURCES LOGIC ---
+
+// --- LOCAL SOURCES LOGIC ---
 const renderLocalSourcesList = async () => {
   const sources = getLocalSources();
   dom.lists.localSources.innerHTML = sources.length === 0 
@@ -248,7 +388,8 @@ dom.lists.localSources.addEventListener('click', async (e) => {
     showToast(`Arquivo "${name}" removido!`);
   }
 });
-    // --- LOAD SOURCES ---
+
+// --- LOAD SOURCES ---
 const loadAllSources = async () => {
   const onlineSources = getOnlineSources();
   const localSources = getLocalSources();
@@ -351,7 +492,8 @@ const populateCategories = () => {
     dom.categoriesContainer.innerHTML = `<h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categorias</h3>${list}`;
   }
 };
-    // --- UI & MODAL LOGIC ---
+
+// --- UI & MODAL LOGIC ---
 const openModal = (modal) => { 
   dom.modals.backdrop.classList.remove('hidden'); 
   modal.classList.remove('hidden'); 
@@ -426,13 +568,46 @@ dom.sidebarNav.addEventListener('click', (e) => {
   renderGames();
 });
 
+// Periodic Sync Toggle
+dom.sync.toggle.addEventListener('change', async (e) => {
+  if (e.target.checked) {
+    await registerPeriodicSync();
+  } else {
+    await unregisterPeriodicSync();
+  }
+});
+
 // --- PWA Service Worker ---
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+  window.addEventListener('load', () => { 
+    navigator.serviceWorker.register('./sw.js').then(registration => {
+      console.log('Service Worker registrado com sucesso:', registration);
+      
+      // Verificar se a sincronização periódica está disponível
+      if ('periodicSync' in registration) {
+        console.log('Periodic Sync está disponível');
+        
+        // Verificar se já temos uma sincronização registrada
+        registration.periodicSync.getTags().then(tags => {
+          if (tags.includes('gamevault-sync')) {
+            setPeriodicSyncEnabled(true);
+            updateSyncStatus();
+          }
+        });
+      } else {
+        console.log('Periodic Sync não está disponível');
+        dom.sync.toggle.disabled = true;
+        dom.sync.status.textContent = 'Não suportado neste navegador';
+      }
+    }).catch(error => {
+      console.log('Falha no registro do Service Worker:', error);
+    });
+  });
 }
 
 // --- INICIALIZAÇÃO ---
 loadAllSources();
+updateSyncStatus();
 });
 </script>
 </body>
