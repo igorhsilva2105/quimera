@@ -1,3 +1,4 @@
+// sw.js
 const CACHE_NAME = 'gamevault-cache-v1';
 const urlsToCache = [
   '/',
@@ -38,4 +39,44 @@ self.addEventListener('activate', event => {
       );
     })
   );
+});
+
+// Periodic Background Sync
+self.addEventListener('periodicsync', event => {
+  if (event.tag === 'gamevault-sync') {
+    console.log('Executando sincronização periódica...');
+    event.waitUntil(
+      // Envia uma mensagem para a página principal para executar a sincronização
+      self.clients.matchAll().then(clients => {
+        if (clients && clients.length) {
+          clients.forEach(client => {
+            client.postMessage({
+              type: 'SYNC_GAMES'
+            });
+          });
+        }
+      })
+    );
+  }
+});
+
+// Ouvir mensagens da página principal
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'TRIGGER_SYNC') {
+    // Disparar uma sincronização imediata
+    self.registration.periodicSync.getTags().then(tags => {
+      if (tags.includes('gamevault-sync')) {
+        // Se a sincronização periódica estiver registrada, executa a sincronização
+        self.clients.matchAll().then(clients => {
+          if (clients && clients.length) {
+            clients.forEach(client => {
+              client.postMessage({
+                type: 'SYNC_GAMES'
+              });
+            });
+          }
+        });
+      }
+    });
+  }
 });
